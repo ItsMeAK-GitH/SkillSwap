@@ -1,0 +1,22 @@
+{
+  "placeholderImages": [
+    {
+      "id": "testimonial-1",
+      "description": "A person smiling",
+      "imageUrl": "https://picsum.photos/seed/1/100/100",
+      "imageHint": "person smiling"
+    },
+    {
+      "id": "testimonial-2",
+      "description": "A person focused on a laptop",
+      "imageUrl": "https://picsum.photos/seed/2/100/100",
+      "imageHint": "person laptop"
+    },
+    {
+      "id": "testimonial-3",
+      "description": "A person playing guitar",
+      "imageUrl": "https://picsum.photos/seed/3/100/100",
+      "imageHint": "person guitar"
+    }
+  ]
+}

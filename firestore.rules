@@ -1,0 +1,189 @@
+/**
+ * @description: This ruleset enforces a strict user-ownership model for user profiles and associated data, while allowing public read access to skills and skill snippets. Chat message security relies on explicit membership.
+ * @dataStructure:
+ *   - User profiles are stored under `/users/{userId}`, where `userId` is the Firebase Auth UID.
+ *   - User-specific data (availability slots, skill points) are nested under `/users/{userId}`.
+ *   - Skills are stored in the top-level `/skills/{skillId}` collection.
+ *   - Chat messages are stored under `/chats/{chatId}/messages/{messageId}`.
+ *   - Skill snippets are stored in the top-level `/skillSnippets/{skillSnippetId}` collection.
+ * @keySecurityDecisions:
+ *   - User listing is disallowed.
+ *   - Skills and skill snippets are publicly readable but only administrators can modify them.
+ *   - User-specific data requires a valid, signed-in user.
+ * @denormalizationForAuthorization:
+ *   - The `userId` is denormalized into `AvailabilitySlot` and `SkillPoint` documents to avoid extra reads during authorization.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * @description: Enforces access control for user profiles.  Only the authenticated user can read or write their own profile.
+     * @path: /users/{userId}
+     * @allow: (create) If the user is authenticated and the userId matches the authenticated user's UID.
+     * @deny: (create) If the user is not authenticated.
+     * @deny: (update) If the authenticated user's UID does not match the userId.
+     * @principle: Enforces document ownership for all operations.
+     */
+    match /users/{userId} {
+      function isSignedIn() {
+        return request.auth != null;
+      }
+
+      function isOwner(userId) {
+        return request.auth.uid == userId;
+      }
+
+      function isExistingOwner(userId) {
+        return isSignedIn() && isOwner(userId) && resource != null;
+      }
+
+      // Read rules
+      allow get: if isOwner(userId);
+      allow list: if false; // User listing is disallowed.
+
+      // Write rules
+      allow create: if isSignedIn() && isOwner(userId);
+      allow update: if isExistingOwner(userId);
+      allow delete: if isExistingOwner(userId);
+    }
+
+    /**
+     * @description: Enforces access control for availability slots. Only the owner of the user profile can read or write availability slots.
+     * @path: /users/{userId}/availabilitySlots/{availabilitySlotId}
+     * @allow: (create) If the user is authenticated and the userId matches the authenticated user's UID and the availabilitySlot also contains the user id.
+     * @deny: (create) If the user is not authenticated.
+     * @deny: (update) If the authenticated user's UID does not match the userId.
+     * @principle: Enforces document ownership for all operations.
+     */
+    match /users/{userId}/availabilitySlots/{availabilitySlotId} {
+      function isSignedIn() {
+        return request.auth != null;
+      }
+
+      function isOwner(userId) {
+        return request.auth.uid == userId;
+      }
+
+       function isExistingOwner(userId) {
+        return isSignedIn() && isOwner(userId) && resource.data != null;
+      }
+
+      function isCreatingOwner(userId) {
+          return isSignedIn() && isOwner(userId) && request.resource.data.userId == userId;
+      }
+
+      // Read rules
+      allow get: if isOwner(userId);
+      allow list: if isOwner(userId);
+
+      // Write rules
+      allow create: if isCreatingOwner(userId);
+      allow update: if isExistingOwner(userId);
+      allow delete: if isExistingOwner(userId);
+    }
+
+    /**
+     * @description: Enforces access control for skill points. Only the owner of the user profile can read or write skill points.
+     * @path: /users/{userId}/skillPoints/{skillPointId}
+     * @allow: (create) If the user is authenticated and the userId matches the authenticated user's UID and the skillPoint also contains the user id.
+     * @deny: (create) If the user is not authenticated.
+     * @deny: (update) If the authenticated user's UID does not match the userId.
+     * @principle: Enforces document ownership for all operations.
+     */
+    match /users/{userId}/skillPoints/{skillPointId} {
+      function isSignedIn() {
+        return request.auth != null;
+      }
+
+      function isOwner(userId) {
+        return request.auth.uid == userId;
+      }
+
+       function isExistingOwner(userId) {
+        return isSignedIn() && isOwner(userId) && resource.data != null;
+      }
+
+      function isCreatingOwner(userId) {
+          return isSignedIn() && isOwner(userId) && request.resource.data.userId == userId;
+      }
+
+
+      // Read rules
+      allow get: if isOwner(userId);
+      allow list: if isOwner(userId);
+
+      // Write rules
+      allow create: if isCreatingOwner(userId);
+      allow update: if isExistingOwner(userId);
+      allow delete: if isExistingOwner(userId);
+    }
+
+    /**
+     * @description: Allows public read access to skills, but restricts write access.
+     * @path: /skills/{skillId}
+     * @allow: (get, list) Any user can read skills.
+     * @deny: (create, update, delete) Only admin users can modify skills.
+     * @principle: Public read, owner-only write (assuming an ownership field is added later).
+     */
+    match /skills/{skillId} {
+      // Read rules: Public access.
+      allow get: if true;
+      allow list: if true;
+
+      // Write rules: Owner-only access.
+      allow create: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    /**
+     * @description: Enforces access control for chat messages within a chat. Only members of the chat can read and write messages.
+     * @path: /chats/{chatId}/messages/{messageId}
+     * @allow: (create) If the user is a member of the chat.
+     * @deny: (create) If the user is not a member of the chat.
+     * @deny: (update, delete) If the user is not the sender of the message.
+     * @principle: Enforces group membership for all operations.
+     */
+    match /chats/{chatId}/messages/{messageId} {
+      function isSignedIn() {
+        return request.auth != null;
+      }
+
+      function isChatMember(chatId) {
+          // CRITICAL: Cannot implement shared access.  The 'ChatMessage' entity does not contain the chatId.
+          return false; // TODO: Implement shared access using a members map in the chat document.
+      }
+
+      function isOwnerOfMessage() {
+          return request.auth.uid == resource.data.uid;
+      }
+
+      // Read rules
+      allow get: if isChatMember(chatId);
+      allow list: if isChatMember(chatId);
+
+      // Write rules
+      allow create: if isSignedIn() && isChatMember(chatId);
+      allow update: if isSignedIn() && isChatMember(chatId) && isOwnerOfMessage();
+      allow delete: if isSignedIn() && isChatMember(chatId) && isOwnerOfMessage();
+    }
+
+    /**
+     * @description: Allows public read access to skill snippets, but restricts write access.
+     * @path: /skillSnippets/{skillSnippetId}
+     * @allow: (get, list) Any user can read skill snippets.
+     * @deny: (create, update, delete) Only admin users can modify skill snippets.
+     */
+    match /skillSnippets/{skillSnippetId} {
+      // Read rules: Public access.
+      allow get: if true;
+      allow list: if true;
+
+      // Write rules: Owner-only access.
+      allow create: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow update: if false;
+      allow delete: if false;
+    }
+  }
+}

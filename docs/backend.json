@@ -1,0 +1,338 @@
+{
+  "entities": {
+    "UserProfile": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UserProfile",
+      "type": "object",
+      "description": "Represents a user profile on the SkillSwap platform.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the user profile."
+        },
+        "googleId": {
+          "type": "string",
+          "description": "The unique identifier from the user's Google account."
+        },
+        "name": {
+          "type": "string",
+          "description": "User's full name."
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address.",
+          "format": "email"
+        },
+        "bio": {
+          "type": "string",
+          "description": "A short biography or description of the user."
+        },
+        "skillIdsTeaching": {
+          "type": "array",
+          "description": "References to skills the user is teaching. (Relationship: UserProfile 1:N Skill)",
+          "items": {
+            "type": "string"
+          }
+        },
+        "skillIdsLearning": {
+          "type": "array",
+          "description": "References to skills the user wants to learn. (Relationship: UserProfile 1:N Skill)",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "googleId",
+        "name",
+        "email"
+      ]
+    },
+    "Skill": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Skill",
+      "type": "object",
+      "description": "Represents a skill that users can teach or learn.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the skill."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the skill (e.g., Python, Guitar)."
+        },
+        "description": {
+          "type": "string",
+          "description": "A brief description of the skill."
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "ChatMessage": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ChatMessage",
+      "type": "object",
+      "description": "Represents a chat message between two users.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the chat message."
+        },
+        "senderId": {
+          "type": "string",
+          "description": "Reference to the user who sent the message. (Relationship: UserProfile 1:N ChatMessage)"
+        },
+        "receiverId": {
+          "type": "string",
+          "description": "Reference to the user who received the message. (Relationship: UserProfile 1:N ChatMessage)"
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Timestamp of when the message was sent.",
+          "format": "date-time"
+        },
+        "content": {
+          "type": "string",
+          "description": "Content of the chat message."
+        },
+        "skillSnippetId": {
+          "type": "string",
+          "description": "Reference to skill snippet shared in the message, if any. (Relationship: ChatMessage 1:1 SkillSnippet)"
+        }
+      },
+      "required": [
+        "id",
+        "senderId",
+        "receiverId",
+        "timestamp",
+        "content"
+      ]
+    },
+    "AvailabilitySlot": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "AvailabilitySlot",
+      "type": "object",
+      "description": "Represents a time slot when a user is available for a skill swap.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the availability slot."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the user who owns this availability slot. (Relationship: UserProfile 1:N AvailabilitySlot)"
+        },
+        "startTime": {
+          "type": "string",
+          "description": "Start time of the availability slot.",
+          "format": "date-time"
+        },
+        "endTime": {
+          "type": "string",
+          "description": "End time of the availability slot.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "startTime",
+        "endTime"
+      ]
+    },
+    "SkillPoint": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "SkillPoint",
+      "type": "object",
+      "description": "Represents skill points earned by a user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the skill point record."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the user who earned the skill points. (Relationship: UserProfile 1:N SkillPoint)"
+        },
+        "points": {
+          "type": "number",
+          "description": "Number of skill points earned."
+        },
+        "reason": {
+          "type": "string",
+          "description": "Reason for earning the skill points (e.g., successful swap)."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Timestamp of when the skill points were earned.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "points",
+        "reason",
+        "timestamp"
+      ]
+    },
+    "SkillSnippet": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "SkillSnippet",
+      "type": "object",
+      "description": "Represents a shared skill snippet within a chat message.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the skill snippet."
+        },
+        "skillId": {
+          "type": "string",
+          "description": "Reference to the skill associated with the snippet. (Relationship: Skill 1:N SkillSnippet)"
+        },
+        "projectId": {
+          "type": "string",
+          "description": "Identifier for the project associated with the snippet, if any."
+        },
+        "link": {
+          "type": "string",
+          "description": "Link to the project or skill resource.",
+          "format": "uri"
+        },
+        "description": {
+          "type": "string",
+          "description": "A brief description of the skill snippet."
+        }
+      },
+      "required": [
+        "id",
+        "skillId",
+        "link"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "UserProfile",
+          "schema": {
+            "$ref": "#/backend/entities/UserProfile"
+          },
+          "description": "Stores user profile information. The document ID is the Firebase Auth UID.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The Firebase Auth UID of the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/availabilitySlots/{availabilitySlotId}",
+        "definition": {
+          "entityName": "AvailabilitySlot",
+          "schema": {
+            "$ref": "#/backend/entities/AvailabilitySlot"
+          },
+          "description": "Stores availability slots for a user. Includes denormalized 'userId' for authorization independence.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The Firebase Auth UID of the user."
+            },
+            {
+              "name": "availabilitySlotId",
+              "description": "Unique ID of the availability slot."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/skillPoints/{skillPointId}",
+        "definition": {
+          "entityName": "SkillPoint",
+          "schema": {
+            "$ref": "#/backend/entities/SkillPoint"
+          },
+          "description": "Stores skill points earned by a user. Includes denormalized 'userId' for authorization independence.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The Firebase Auth UID of the user."
+            },
+            {
+              "name": "skillPointId",
+              "description": "Unique ID of the skill point record."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/skills/{skillId}",
+        "definition": {
+          "entityName": "Skill",
+          "schema": {
+            "$ref": "#/backend/entities/Skill"
+          },
+          "description": "Stores information about available skills.",
+          "params": [
+            {
+              "name": "skillId",
+              "description": "Unique ID of the skill."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/chats/{chatId}/messages/{messageId}",
+        "definition": {
+          "entityName": "ChatMessage",
+          "schema": {
+            "$ref": "#/backend/entities/ChatMessage"
+          },
+          "description": "Stores chat messages between users.  Consider denormalizing a `members` map in `/chats/{chatId}` for authorization.",
+          "params": [
+            {
+              "name": "chatId",
+              "description": "Unique ID of the chat."
+            },
+            {
+              "name": "messageId",
+              "description": "Unique ID of the message."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/skillSnippets/{skillSnippetId}",
+        "definition": {
+          "entityName": "SkillSnippet",
+          "schema": {
+            "$ref": "#/backend/entities/SkillSnippet"
+          },
+          "description": "Stores skill snippets, which are shared within chat messages.",
+          "params": [
+            {
+              "name": "skillSnippetId",
+              "description": "Unique ID of the skill snippet."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed to support SkillSwap's core features with a focus on authorization independence and scalability. User profiles and their associated data (availability, skill points) are organized under the `/users/{userId}` path for clear ownership and easy security rule definition. Skills are stored in a top-level `/skills` collection, allowing for efficient searching and retrieval. Chat messages are grouped into subcollections under a `/chats` collection, with metadata indicating the participants. This design promotes secure data access and efficient querying.\n\n**Authorization Independence:** User-specific data (availability, skill points) is nested under `/users/{userId}`, ensuring that access control can be based solely on the `request.auth.uid` matching the `userId` path parameter.  For collaborative data (chats), consider adding a `members` map to each `/chats/{chatId}` document to explicitly list authorized users and their roles, thus avoiding the need for `get()` calls to parent documents.\n\n**QAPs (Rules are not Filters):**\n*   Secure `list` operations are enabled by the clear separation of user data and the use of path-based ownership for private data. Listing availability slots or skill points under `/users/{userId}` can be secured by verifying that `request.auth.uid == userId`.\n*   Skills are stored in a separate collection and can be listed publicly or with role-based access control using a membership map if needed.\n\n**Denormalization:**\nTo achieve authorization independence, important data like `userId` is duplicated in AvailabilitySlot and SkillPoint documents nested under `/users/{userId}`. If chat access control relies on group membership, denormalizing a `members` map (e.g., `{userId1: true, userId2: true}`) within each `/chats/{chatId}` document is essential.\n\n**Authentication Workflow:**\n\n1.  **Google Authentication**: The platform should authenticate users through Google Sign-In. The `googleId` field in the `UserProfile` is crucial for associating the Firebase Auth UID with the user's Google account.\n2.  **User Creation**: Upon successful Google authentication, check if a `UserProfile` document exists in `/users/{uid}`. If not, create one, populating the `googleId`, `name`, and `email` from the Google authentication data.\n3.  **Data Association**: All user-specific data (AvailabilitySlots, SkillPoints) are stored under the `/users/{uid}` path, where `uid` is the Firebase Auth UID. This ensures a direct and secure link between the authenticated user and their data.\n\nThis workflow simplifies security rules because you can directly verify `request.auth.uid == userId` for any operation on user-specific data. No custom claims are needed; the Firebase Auth UID serves as the primary key for all user-related data."
+  }
+}
