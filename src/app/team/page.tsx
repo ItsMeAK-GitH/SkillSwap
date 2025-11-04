@@ -50,14 +50,15 @@ export default function TeamPage() {
           </div>
 
           <div className="mt-16 mb-24">
-            <div className="max-w-4xl mx-auto">
-              <div className="relative aspect-[16/9] rounded-2xl overflow-hidden shadow-2xl shadow-primary/20 border border-primary/30">
+            <div className="max-w-xl mx-auto">
+              <div className="relative aspect-[16/9] rounded-2xl overflow-hidden shadow-2xl shadow-primary/20 border border-primary/30 bg-white">
                 <Image
                   src="/team/team.png"
                   alt="DevSwap Team Photo"
                   fill
-                  style={{ objectFit: 'cover' }}
-                  unoptimized // Use this if the image is already optimized or you want to avoid Next.js processing
+                  style={{ objectFit: 'contain' }}
+                  className="grayscale"
+                  unoptimized 
                 />
               </div>
             </div>
