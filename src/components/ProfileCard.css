@@ -257,13 +257,14 @@
   background-position: bottom center;
   background-repeat: no-repeat;
   background-image: var(--avatar-image);
-  overflow: hidden;
+  overflow: visible; /* Prevent clipping */
   z-index: 2;
   transform: translate3d(
     calc(var(--pointer-from-left) * -12px + 6px),
     calc(var(--pointer-from-top) * -12px + 6px),
     10px
   );
+  inset: -10% 0 -5% 0; /* Allow image to overflow slightly without being cut */
 }
 
 
