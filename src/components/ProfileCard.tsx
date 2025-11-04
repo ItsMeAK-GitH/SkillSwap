@@ -258,45 +258,50 @@ const ProfileCardComponent = ({
         <div className="pc-inside">
           <div className="pc-shine" />
           <div className="pc-glare" />
-          <div className="pc-content pc-avatar-content">
-            {showUserInfo && (
-              <div className="pc-user-info">
-                <div className="pc-user-details">
-                  <div className="pc-mini-avatar">
-                    <img
-                      src={miniAvatarUrl || avatarUrl}
-                      alt={`${name || 'User'} mini avatar`}
-                      loading="lazy"
-                      onError={e => {
-                        const target = e.target as HTMLImageElement;
-                        target.style.opacity = '0.5';
-                        target.src = avatarUrl;
-                      }}
-                    />
-                  </div>
-                  <div className="pc-user-text">
-                    <div className="pc-handle">@{handle}</div>
-                    <div className="pc-status">{status}</div>
-                  </div>
-                </div>
-                <button
-                  className="pc-contact-btn"
-                  onClick={handleContactClick}
-                  style={{ pointerEvents: 'auto' }}
-                  type="button"
-                  aria-label={`Contact ${name || 'user'}`}
-                >
-                  {contactText}
-                </button>
-              </div>
-            )}
-          </div>
+
+          {/* Text content now lives in its own layer */}
           <div className="pc-content">
             <div className="pc-details">
               <h3>{name}</h3>
               <p>{title}</p>
             </div>
           </div>
+          
+          {/* Avatar content is a separate layer */}
+          <div className="pc-avatar-content" />
+
+          {/* User info bar is the top-most interactive layer */}
+          {showUserInfo && (
+            <div className="pc-user-info">
+              <div className="pc-user-details">
+                <div className="pc-mini-avatar">
+                  <img
+                    src={miniAvatarUrl || avatarUrl}
+                    alt={`${name || 'User'} mini avatar`}
+                    loading="lazy"
+                    onError={e => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.opacity = '0.5';
+                      target.src = avatarUrl;
+                    }}
+                  />
+                </div>
+                <div className="pc-user-text">
+                  <div className="pc-handle">@{handle}</div>
+                  <div className="pc-status">{status}</div>
+                </div>
+              </div>
+              <button
+                className="pc-contact-btn"
+                onClick={handleContactClick}
+                style={{ pointerEvents: 'auto' }}
+                type="button"
+                aria-label={`Contact ${name || 'user'}`}
+              >
+                {contactText}
+              </button>
+            </div>
+          )}
         </div>
       </section>
     </div>

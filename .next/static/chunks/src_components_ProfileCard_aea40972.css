@@ -169,7 +169,8 @@
   background-position: top;
   background-size: cover;
   background-image: var(--avatar-image);
-  mix-blend-mode: screen;
+  z-index: 1;
+  transform: translate3d(calc(var(--pointer-from-left) * -12px + 6px), calc(var(--pointer-from-top) * -12px + 6px), 10px);
   overflow: hidden;
 }
 
@@ -271,7 +272,7 @@
   padding: 1rem;
   position: relative;
   overflow: hidden;
-  transform: translate3d(calc(var(--pointer-from-left) * -24px + 12px), calc(var(--pointer-from-top) * -24px + 12px), 20px) !important;
+  transform: translate3d(calc(var(--pointer-from-left) * -32px + 16px), calc(var(--pointer-from-top) * -32px + 16px), 30px) !important;
 }
 
 .pc-details {
@@ -287,7 +288,7 @@
 
 .pc-details h3 {
   color: #fff;
-  text-shadow: 0 2px 4px hsl(var(--primary) / .3);
+  text-shadow: 0 4px 10px hsl(var(--primary) / .5);
   margin: 0;
   font-size: clamp(1.5rem, 5svh, 2.5em);
   font-weight: 600;
