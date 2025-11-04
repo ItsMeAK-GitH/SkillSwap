@@ -16,14 +16,14 @@ const teamMembers = [
     name: 'Akhilan VTM',
     title: 'Frontend & UI/UX Specialist',
     handle: 'akhilanvtm',
-    avatarUrl: '',
+    avatarUrl: null,
     contactLink: 'https://github.com/akhilanvtm'
   },
   {
     name: 'Sanjeev TS',
     title: 'Backend & DevOps Engineer',
     handle: 'sanjeev-ts',
-    avatarUrl: '',
+    avatarUrl: null,
     contactLink: 'https://github.com/sanjeev-ts'
   },
 ];

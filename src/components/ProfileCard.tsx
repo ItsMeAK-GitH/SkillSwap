@@ -251,6 +251,8 @@ const ProfileCardComponent = ({
   const handleContactClick = useCallback((e: React.MouseEvent) => {
       onContactClick?.(e);
   }, [onContactClick]);
+  
+  const displayAvatarUrl = miniAvatarUrl || avatarUrl;
 
   return (
     <div ref={wrapRef} className={`pc-card-wrapper ${className}`.trim()} style={cardStyle}>
@@ -275,16 +277,13 @@ const ProfileCardComponent = ({
             <div className="pc-user-info">
               <div className="pc-user-details">
                 <div className="pc-mini-avatar">
-                  <img
-                    src={miniAvatarUrl || avatarUrl}
-                    alt={`${name || 'User'} mini avatar`}
-                    loading="lazy"
-                    onError={e => {
-                      const target = e.target as HTMLImageElement;
-                      target.style.opacity = '0.5';
-                      target.src = avatarUrl;
-                    }}
-                  />
+                  {displayAvatarUrl && (
+                    <img
+                      src={displayAvatarUrl}
+                      alt={`${name || 'User'} mini avatar`}
+                      loading="lazy"
+                    />
+                  )}
                 </div>
                 <div className="pc-user-text">
                   <div className="pc-handle">@{handle}</div>
