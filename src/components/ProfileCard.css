@@ -253,6 +253,9 @@
 }
 
 .pc-avatar-content {
+  background-size: cover;
+  background-position: top center;
+  background-image: var(--avatar-image);
   mix-blend-mode: screen;
   overflow: hidden;
 }

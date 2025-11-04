@@ -239,12 +239,13 @@ const ProfileCardComponent = ({
 
   const cardStyle = useMemo(
     () => ({
+      '--avatar-image': `url(${avatarUrl})`,
       '--icon': iconUrl ? `url(${iconUrl})` : 'none',
       '--grain': grainUrl ? `url(${grainUrl})` : 'none',
       '--behind-gradient': showBehindGradient ? (behindGradient ?? DEFAULT_BEHIND_GRADIENT) : 'none',
       '--inner-gradient': innerGradient ?? DEFAULT_INNER_GRADIENT
     }),
-    [iconUrl, grainUrl, showBehindGradient, behindGradient, innerGradient]
+    [avatarUrl, iconUrl, grainUrl, showBehindGradient, behindGradient, innerGradient]
   );
 
   const handleContactClick = useCallback((e: React.MouseEvent) => {
