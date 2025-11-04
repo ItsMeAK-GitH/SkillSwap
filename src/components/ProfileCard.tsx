@@ -27,7 +27,7 @@ const adjust = (value: number, fromMin: number, fromMax: number, toMin: number, 
 const easeInOutCubic = (x: number) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
 
 const ProfileCardComponent = ({
-  avatarUrl = '<Placeholder for avatar URL>',
+  avatarUrl,
   iconUrl = '<Placeholder for icon URL>',
   grainUrl = '<Placeholder for grain URL>',
   behindGradient,
@@ -239,7 +239,7 @@ const ProfileCardComponent = ({
 
   const cardStyle = useMemo(
     () => ({
-      '--avatar-image': `url(${avatarUrl})`,
+      '--avatar-image': avatarUrl ? `url(${avatarUrl})` : 'none',
       '--icon': iconUrl ? `url(${iconUrl})` : 'none',
       '--grain': grainUrl ? `url(${grainUrl})` : 'none',
       '--behind-gradient': showBehindGradient ? (behindGradient ?? DEFAULT_BEHIND_GRADIENT) : 'none',
@@ -267,8 +267,8 @@ const ProfileCardComponent = ({
             </div>
           </div>
           
-          {/* Avatar content is a separate layer */}
-          <div className="pc-avatar-content" />
+          {/* Avatar content is a separate layer, rendered conditionally */}
+          {avatarUrl && <div className="pc-avatar-content" />}
 
           {/* User info bar is the top-most interactive layer */}
           {showUserInfo && (

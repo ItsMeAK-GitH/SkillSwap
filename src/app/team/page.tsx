@@ -16,14 +16,14 @@ const teamMembers = [
     name: 'Akhilan VTM',
     title: 'Frontend & UI/UX Specialist',
     handle: 'akhilanvtm',
-    avatarUrl: 'https://api.dicebear.com/8.x/initials/svg?seed=Akhilan',
+    avatarUrl: '',
     contactLink: 'https://github.com/akhilanvtm'
   },
   {
     name: 'Sanjeev TS',
     title: 'Backend & DevOps Engineer',
     handle: 'sanjeev-ts',
-    avatarUrl: 'https://api.dicebear.com/8.x/initials/svg?seed=Sanjeev',
+    avatarUrl: '',
     contactLink: 'https://github.com/sanjeev-ts'
   },
 ];

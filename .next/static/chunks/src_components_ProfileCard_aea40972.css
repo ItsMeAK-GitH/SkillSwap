@@ -172,7 +172,8 @@
   background-image: var(--avatar-image);
   z-index: 2;
   transform: translate3d(calc(var(--pointer-from-left) * -12px + 6px), calc(var(--pointer-from-top) * -12px + 6px), 10px);
-  overflow: hidden;
+  inset: -10% 0 -5%;
+  overflow: visible;
 }
 
 .pc-avatar-content:before {
