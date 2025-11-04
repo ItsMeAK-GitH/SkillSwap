@@ -1,3 +1,4 @@
+
 'use client';
 
 import Header from '@/components/layout/header';
@@ -8,7 +9,7 @@ const teamMembers = [
     name: 'Akshith Rajesh',
     title: 'Full-Stack & AI Architect',
     handle: 'ItsMeAK-GitH',
-    avatarUrl: 'https://api.dicebear.com/8.x/initials/svg?seed=Akshith',
+    avatarUrl: '/team/DSC_0177-removebg-preview.png',
     contactLink: 'https://github.com/ItsMeAK-GitH'
   },
   {
