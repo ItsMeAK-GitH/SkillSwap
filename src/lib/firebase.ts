@@ -10,15 +10,20 @@ interface FirebaseServices {
   firebaseApp: FirebaseApp;
 }
 
+let services: FirebaseServices | null = null;
+
 // This function provides a server-safe way to get Firebase services.
+// It initializes Firebase only once and reuses the instance.
 export function getFirebaseServices(): FirebaseServices {
+  if (services) {
+    return services;
+  }
+
   const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
   const firestore = getFirestore(app);
   const auth = getAuth(app);
-  return { auth, firestore, firebaseApp: app };
+  
+  services = { auth, firestore, firebaseApp: app };
+  
+  return services;
 }
-
-// Export singleton instances for server-side use.
-const { auth, firestore, firebaseApp } = getFirebaseServices();
-
-export { auth, firestore, firebaseApp };
