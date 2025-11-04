@@ -73,9 +73,6 @@ if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelper
 var { g: global, __dirname, k: __turbopack_refresh__, m: module } = __turbopack_context__;
 {
 __turbopack_context__.s({
-    "auth": (()=>auth),
-    "firebaseApp": (()=>firebaseApp),
-    "firestore": (()=>firestore),
     "getFirebaseServices": (()=>getFirebaseServices)
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$firebase$2f$app$2f$dist$2f$esm$2f$index$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$module__evaluation$3e$__ = __turbopack_context__.i("[project]/node_modules/firebase/app/dist/esm/index.esm.js [app-client] (ecmascript) <module evaluation>");
@@ -89,19 +86,21 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$firebase$2f$config$2e
 ;
 ;
 ;
+let services = null;
 function getFirebaseServices() {
+    if (services) {
+        return services;
+    }
     const app = !(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$firebase$2f$app$2f$dist$2f$esm$2f$index$2e$esm2017$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["getApps"])().length ? (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$firebase$2f$app$2f$dist$2f$esm$2f$index$2e$esm2017$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["initializeApp"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$firebase$2f$config$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["firebaseConfig"]) : (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$firebase$2f$app$2f$dist$2f$esm$2f$index$2e$esm2017$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["getApp"])();
     const firestore = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$firebase$2f$firestore$2f$dist$2f$index$2e$esm2017$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getFirestore"])(app);
     const auth = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$firebase$2f$node_modules$2f40$firebase$2f$auth$2f$dist$2f$esm2017$2f$index$2d$8e6e89cb$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__p__as__getAuth$3e$__["getAuth"])(app);
-    return {
+    services = {
         auth,
         firestore,
         firebaseApp: app
     };
+    return services;
 }
-// Export singleton instances for server-side use.
-const { auth, firestore, firebaseApp } = getFirebaseServices();
-;
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
     __turbopack_context__.k.registerExports(module, globalThis.$RefreshHelpers$);
 }
@@ -945,7 +944,7 @@ const clamp = (value, min = 0, max = 100)=>Math.min(Math.max(value, min), max);
 const round = (value, precision = 3)=>parseFloat(value.toFixed(precision));
 const adjust = (value, fromMin, fromMax, toMin, toMax)=>round(toMin + (toMax - toMin) * (value - fromMin) / (fromMax - fromMin));
 const easeInOutCubic = (x)=>x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
-const ProfileCardComponent = ({ avatarUrl = '<Placeholder for avatar URL>', iconUrl = '<Placeholder for icon URL>', grainUrl = '<Placeholder for grain URL>', behindGradient, innerGradient, showBehindGradient = true, className = '', enableTilt = true, enableMobileTilt = false, mobileTiltSensitivity = 5, miniAvatarUrl, name = 'Javi A. Torres', title = 'Software Engineer', handle = 'javicodes', status = 'Online', contactText = 'Contact', showUserInfo = true, onContactClick })=>{
+const ProfileCardComponent = ({ avatarUrl, iconUrl = '<Placeholder for icon URL>', grainUrl = '<Placeholder for grain URL>', behindGradient, innerGradient, showBehindGradient = true, className = '', enableTilt = true, enableMobileTilt = false, mobileTiltSensitivity = 5, miniAvatarUrl, name = 'Javi A. Torres', title = 'Software Engineer', handle = 'javicodes', status = 'Online', contactText = 'Contact', showUserInfo = true, onContactClick })=>{
     _s();
     const wrapRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
     const cardRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
@@ -1122,12 +1121,14 @@ const ProfileCardComponent = ({ avatarUrl = '<Placeholder for avatar URL>', icon
     ]);
     const cardStyle = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
         "ProfileCardComponent.useMemo[cardStyle]": ()=>({
+                '--avatar-image': avatarUrl ? `url(${avatarUrl})` : 'none',
                 '--icon': iconUrl ? `url(${iconUrl})` : 'none',
                 '--grain': grainUrl ? `url(${grainUrl})` : 'none',
                 '--behind-gradient': showBehindGradient ? behindGradient ?? DEFAULT_BEHIND_GRADIENT : 'none',
                 '--inner-gradient': innerGradient ?? DEFAULT_INNER_GRADIENT
             })
     }["ProfileCardComponent.useMemo[cardStyle]"], [
+        avatarUrl,
         iconUrl,
         grainUrl,
         showBehindGradient,
@@ -1141,6 +1142,7 @@ const ProfileCardComponent = ({ avatarUrl = '<Placeholder for avatar URL>', icon
     }["ProfileCardComponent.useCallback[handleContactClick]"], [
         onContactClick
     ]);
+    const displayAvatarUrl = miniAvatarUrl || avatarUrl;
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         ref: wrapRef,
         className: `pc-card-wrapper ${className}`.trim(),
@@ -1155,102 +1157,14 @@ const ProfileCardComponent = ({ avatarUrl = '<Placeholder for avatar URL>', icon
                         className: "pc-shine"
                     }, void 0, false, {
                         fileName: "[project]/src/components/ProfileCard.tsx",
-                        lineNumber: 258,
+                        lineNumber: 261,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "pc-glare"
                     }, void 0, false, {
                         fileName: "[project]/src/components/ProfileCard.tsx",
-                        lineNumber: 259,
-                        columnNumber: 11
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "pc-content pc-avatar-content",
-                        children: showUserInfo && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "pc-user-info",
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "pc-user-details",
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "pc-mini-avatar",
-                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
-                                                src: miniAvatarUrl || avatarUrl,
-                                                alt: `${name || 'User'} mini avatar`,
-                                                loading: "lazy",
-                                                onError: (e)=>{
-                                                    const target = e.target;
-                                                    target.style.opacity = '0.5';
-                                                    target.src = avatarUrl;
-                                                }
-                                            }, void 0, false, {
-                                                fileName: "[project]/src/components/ProfileCard.tsx",
-                                                lineNumber: 265,
-                                                columnNumber: 21
-                                            }, this)
-                                        }, void 0, false, {
-                                            fileName: "[project]/src/components/ProfileCard.tsx",
-                                            lineNumber: 264,
-                                            columnNumber: 19
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "pc-user-text",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "pc-handle",
-                                                    children: [
-                                                        "@",
-                                                        handle
-                                                    ]
-                                                }, void 0, true, {
-                                                    fileName: "[project]/src/components/ProfileCard.tsx",
-                                                    lineNumber: 277,
-                                                    columnNumber: 21
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "pc-status",
-                                                    children: status
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/components/ProfileCard.tsx",
-                                                    lineNumber: 278,
-                                                    columnNumber: 21
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/src/components/ProfileCard.tsx",
-                                            lineNumber: 276,
-                                            columnNumber: 19
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/src/components/ProfileCard.tsx",
-                                    lineNumber: 263,
-                                    columnNumber: 17
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                    className: "pc-contact-btn",
-                                    onClick: handleContactClick,
-                                    style: {
-                                        pointerEvents: 'auto'
-                                    },
-                                    type: "button",
-                                    "aria-label": `Contact ${name || 'user'}`,
-                                    children: contactText
-                                }, void 0, false, {
-                                    fileName: "[project]/src/components/ProfileCard.tsx",
-                                    lineNumber: 281,
-                                    columnNumber: 17
-                                }, this)
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/src/components/ProfileCard.tsx",
-                            lineNumber: 262,
-                            columnNumber: 15
-                        }, this)
-                    }, void 0, false, {
-                        fileName: "[project]/src/components/ProfileCard.tsx",
-                        lineNumber: 260,
+                        lineNumber: 262,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1262,41 +1176,124 @@ const ProfileCardComponent = ({ avatarUrl = '<Placeholder for avatar URL>', icon
                                     children: name
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/ProfileCard.tsx",
-                                    lineNumber: 295,
+                                    lineNumber: 267,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                     children: title
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/ProfileCard.tsx",
-                                    lineNumber: 296,
+                                    lineNumber: 268,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/ProfileCard.tsx",
-                            lineNumber: 294,
+                            lineNumber: 266,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/components/ProfileCard.tsx",
-                        lineNumber: 293,
+                        lineNumber: 265,
                         columnNumber: 11
+                    }, this),
+                    avatarUrl && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "pc-avatar-content"
+                    }, void 0, false, {
+                        fileName: "[project]/src/components/ProfileCard.tsx",
+                        lineNumber: 273,
+                        columnNumber: 25
+                    }, this),
+                    showUserInfo && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "pc-user-info",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "pc-user-details",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "pc-mini-avatar",
+                                        children: displayAvatarUrl && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
+                                            src: displayAvatarUrl,
+                                            alt: `${name || 'User'} mini avatar`,
+                                            loading: "lazy"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/components/ProfileCard.tsx",
+                                            lineNumber: 281,
+                                            columnNumber: 21
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/ProfileCard.tsx",
+                                        lineNumber: 279,
+                                        columnNumber: 17
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "pc-user-text",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "pc-handle",
+                                                children: [
+                                                    "@",
+                                                    handle
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/components/ProfileCard.tsx",
+                                                lineNumber: 289,
+                                                columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "pc-status",
+                                                children: status
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/components/ProfileCard.tsx",
+                                                lineNumber: 290,
+                                                columnNumber: 19
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/components/ProfileCard.tsx",
+                                        lineNumber: 288,
+                                        columnNumber: 17
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/components/ProfileCard.tsx",
+                                lineNumber: 278,
+                                columnNumber: 15
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                className: "pc-contact-btn",
+                                onClick: handleContactClick,
+                                style: {
+                                    pointerEvents: 'auto'
+                                },
+                                type: "button",
+                                "aria-label": `Contact ${name || 'user'}`,
+                                children: contactText
+                            }, void 0, false, {
+                                fileName: "[project]/src/components/ProfileCard.tsx",
+                                lineNumber: 293,
+                                columnNumber: 15
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/components/ProfileCard.tsx",
+                        lineNumber: 277,
+                        columnNumber: 13
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/ProfileCard.tsx",
-                lineNumber: 257,
+                lineNumber: 260,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/src/components/ProfileCard.tsx",
-            lineNumber: 256,
+            lineNumber: 259,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/components/ProfileCard.tsx",
-        lineNumber: 255,
+        lineNumber: 258,
         columnNumber: 5
     }, this);
 };
@@ -1373,7 +1370,7 @@ function CommunityPage() {
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$layout$2f$header$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/src/app/community/page.tsx",
-                lineNumber: 52,
+                lineNumber: 53,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -1389,7 +1386,7 @@ function CommunityPage() {
                                     children: "Meet the Community"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/community/page.tsx",
-                                    lineNumber: 56,
+                                    lineNumber: 57,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1397,13 +1394,13 @@ function CommunityPage() {
                                     children: "Browse all the talented members of the DevSwap network."
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/community/page.tsx",
-                                    lineNumber: 59,
+                                    lineNumber: 60,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/community/page.tsx",
-                            lineNumber: 55,
+                            lineNumber: 56,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1416,12 +1413,12 @@ function CommunityPage() {
                                         className: "w-full h-[420px] bg-muted/20 rounded-[30px] animate-pulse"
                                     }, i, false, {
                                         fileName: "[project]/src/app/community/page.tsx",
-                                        lineNumber: 68,
+                                        lineNumber: 69,
                                         columnNumber: 20
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/src/app/community/page.tsx",
-                                lineNumber: 66,
+                                lineNumber: 67,
                                 columnNumber: 15
                             }, this) : error ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "text-center py-16 text-red-400",
@@ -1430,7 +1427,7 @@ function CommunityPage() {
                                         className: "mx-auto h-12 w-12"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/community/page.tsx",
-                                        lineNumber: 73,
+                                        lineNumber: 74,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -1438,7 +1435,7 @@ function CommunityPage() {
                                         children: "Error Loading Community"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/community/page.tsx",
-                                        lineNumber: 74,
+                                        lineNumber: 75,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1446,13 +1443,13 @@ function CommunityPage() {
                                         children: "There was a problem fetching the user list. It might be a permission issue."
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/community/page.tsx",
-                                        lineNumber: 75,
+                                        lineNumber: 76,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/community/page.tsx",
-                                lineNumber: 72,
+                                lineNumber: 73,
                                 columnNumber: 15
                             }, this) : users && users.length > 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8",
@@ -1462,7 +1459,8 @@ function CommunityPage() {
                                         handle: getHandleFromEmail(profile.email),
                                         status: "Online",
                                         contactText: "Message",
-                                        avatarUrl: profile.photoURL || `https://api.dicebear.com/8.x/initials/svg?seed=${profile.name}`,
+                                        avatarUrl: null,
+                                        miniAvatarUrl: profile.photoURL || `https://api.dicebear.com/8.x/initials/svg?seed=${profile.name}`,
                                         showUserInfo: true,
                                         enableTilt: true,
                                         onContactClick: (e)=>{
@@ -1472,12 +1470,12 @@ function CommunityPage() {
                                         }
                                     }, profile.id, false, {
                                         fileName: "[project]/src/app/community/page.tsx",
-                                        lineNumber: 80,
+                                        lineNumber: 81,
                                         columnNumber: 20
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/src/app/community/page.tsx",
-                                lineNumber: 78,
+                                lineNumber: 79,
                                 columnNumber: 15
                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "text-center py-16",
@@ -1486,7 +1484,7 @@ function CommunityPage() {
                                         className: "mx-auto h-12 w-12 text-muted-foreground"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/community/page.tsx",
-                                        lineNumber: 100,
+                                        lineNumber: 102,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -1494,7 +1492,7 @@ function CommunityPage() {
                                         children: "Community is Empty"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/community/page.tsx",
-                                        lineNumber: 101,
+                                        lineNumber: 103,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1502,35 +1500,35 @@ function CommunityPage() {
                                         children: "Looks like you're the first one here! Check back later as more users join."
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/community/page.tsx",
-                                        lineNumber: 102,
+                                        lineNumber: 104,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/community/page.tsx",
-                                lineNumber: 99,
+                                lineNumber: 101,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/community/page.tsx",
-                            lineNumber: 64,
+                            lineNumber: 65,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/community/page.tsx",
-                    lineNumber: 54,
+                    lineNumber: 55,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/community/page.tsx",
-                lineNumber: 53,
+                lineNumber: 54,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/community/page.tsx",
-        lineNumber: 51,
+        lineNumber: 52,
         columnNumber: 5
     }, this);
 }

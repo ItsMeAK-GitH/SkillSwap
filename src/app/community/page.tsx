@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useCollection, useMemoFirebase, useFirestore } from '@/firebase';
@@ -84,7 +85,8 @@ export default function CommunityPage() {
                       handle={getHandleFromEmail(profile.email)}
                       status="Online"
                       contactText="Message"
-                      avatarUrl={profile.photoURL || `https://api.dicebear.com/8.x/initials/svg?seed=${profile.name}`}
+                      avatarUrl={null} // Set main avatar to null to hide it
+                      miniAvatarUrl={profile.photoURL || `https://api.dicebear.com/8.x/initials/svg?seed=${profile.name}`}
                       showUserInfo={true}
                       enableTilt={true}
                       onContactClick={(e: React.MouseEvent) => {
