@@ -56,7 +56,7 @@ export default function TeamPage() {
                   src="/team/team.png"
                   alt="DevSwap Team Photo"
                   fill
-                  style={{ objectFit: 'contain' }}
+                  style={{ objectFit: 'cover' }}
                   className="grayscale"
                   unoptimized 
                 />
