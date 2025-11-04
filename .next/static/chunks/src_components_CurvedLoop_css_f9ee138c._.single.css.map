@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 1, "column": 0}, "map": {"version":3,"sources":["turbopack:///[project]/src/components/CurvedLoop.css"],"sourcesContent":["\n.curved-loop-jacket {\n  width: 100%;\n}\n\n.curved-loop-svg {\n  width: 100%;\n  aspect-ratio: 100 / 12;\n  overflow: visible;\n  display: block;\n  font-size: 2rem;\n  fill: hsl(var(--muted-foreground));\n  user-select: none;\n  -moz-user-select: none;\n  -webkit-user-select: none;\n  font-weight: 700;\n  text-transform: uppercase;\n  line-height: 1;\n  transition: fill 0.3s ease;\n}\n\n.curved-loop-jacket:hover .curved-loop-svg {\n    fill: hsl(var(--foreground));\n}\n"],"names":[],"mappings":"AACA;;;;AAIA;;;;;;;;;;;;;;;;AAgBA"}}]
+}

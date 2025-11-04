@@ -1,0 +1,100 @@
+/* [project]/src/components/TargetCursor.css [app-client] (css) */
+.target-cursor-wrapper {
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: difference;
+  width: 0;
+  height: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.target-cursor-dot {
+  will-change: opacity;
+  background: #fff;
+  border-radius: 50%;
+  width: 4px;
+  height: 4px;
+  transition: opacity .3s;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.target-cursor-corners-wrapper {
+  will-change: transform;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.target-cursor-corner {
+  will-change: transform;
+  border: 3px solid #fff;
+  width: 12px;
+  height: 12px;
+  transition: opacity .3s;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+.corner-tl {
+  border-bottom: none;
+  border-right: none;
+  transform: translate(-150%, -150%);
+}
+
+.corner-tr {
+  border-bottom: none;
+  border-left: none;
+  transform: translate(50%, -150%);
+}
+
+.corner-br {
+  border-top: none;
+  border-left: none;
+  transform: translate(50%, 50%);
+}
+
+.corner-bl {
+  border-top: none;
+  border-right: none;
+  transform: translate(-150%, 50%);
+}
+
+.text-cursor-bar {
+  opacity: 0;
+  will-change: opacity;
+  background: #fff;
+  border-radius: 3px;
+  width: 3px;
+  height: 24px;
+  transition: opacity .2s ease-in-out;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.target-cursor-wrapper.text-hover .target-cursor-dot, .target-cursor-wrapper.text-hover .target-cursor-corners-wrapper {
+  opacity: 0;
+}
+
+.target-cursor-wrapper.text-hover .text-cursor-bar {
+  opacity: 1;
+}
+
+.target-cursor-wrapper.target-hover .target-cursor-dot, .target-cursor-wrapper.target-hover .text-cursor-bar {
+  opacity: 0;
+}
+
+.target-cursor-wrapper.target-hover .target-cursor-corners-wrapper {
+  opacity: 1;
+}
+
+/*# sourceMappingURL=src_components_TargetCursor_css_f9ee138c._.single.css.map*/

@@ -1,0 +1,22 @@
+{
+  "placeholderImages": [
+    {
+      "id": "testimonial-1",
+      "description": "A developer coding at a desk",
+      "imageUrl": "https://images.unsplash.com/photo-1557853197-aefb550b6fdc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8ZGV2ZWxvcGVyJTIwY29kaW5nfGVufDB8fHx8MTc2MjA1MDgxMHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "developer coding"
+    },
+    {
+      "id": "testimonial-2",
+      "description": "A person working on a laptop with code on the screen",
+      "imageUrl": "https://images.unsplash.com/photo-1543269866-487350d6fa5e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxwZXJzb24lMjBsYXB0b3B8ZW58MHx8fHwxNzYyMTA3MDU3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "person laptop"
+    },
+    {
+      "id": "testimonial-3",
+      "description": "A data scientist looking at graphs on a monitor",
+      "imageUrl": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxkYXRhJTIwc2NpZW50aXN0fGVufDB8fHx8MTc2MjE2Nzg1MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "data scientist"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+/* [project]/src/components/ScrollStack.css [app-client] (css) */
+.scroll-stack-container {
+  width: 100%;
+  position: relative;
+}
+
+.scroll-stack-inner {
+  position: relative;
+}
+
+.scroll-stack-card {
+  transform-origin: center;
+  will-change: transform;
+  box-shadow: 0 0 20px hsl(var(--primary) / .1), 0 10px 30px #0003;
+  box-sizing: border-box;
+  background: hsl(var(--card) / .7);
+  backdrop-filter: blur(10px);
+  width: 100%;
+  height: auto;
+  min-height: auto;
+  color: hsl(var(--card-foreground));
+  border: 1px solid hsl(var(--primary) / .3);
+  border-radius: 40px;
+  margin: 30px 0;
+  padding: 2.5rem;
+  position: sticky;
+}
+
+.scroll-stack-end-spacer {
+  height: 50vh;
+}
+
+/*# sourceMappingURL=src_components_ScrollStack_css_f9ee138c._.single.css.map*/

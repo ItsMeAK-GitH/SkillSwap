@@ -1,0 +1,336 @@
+
+{
+  "entities": {
+    "UserProfile": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UserProfile",
+      "type": "object",
+      "description": "Represents a user profile on the DevSwap platform.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the user profile, typically the Firebase Auth UID."
+        },
+        "googleId": {
+          "type": "string",
+          "description": "The unique identifier from the user's Google account."
+        },
+        "name": {
+          "type": "string",
+          "description": "User's full name."
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address.",
+          "format": "email"
+        },
+        "photoURL": {
+          "type": "string",
+          "description": "URL to the user's profile picture.",
+          "format": "uri"
+        },
+        "bio": {
+          "type": "string",
+          "description": "A short biography or description of the user."
+        },
+        "skillsToTeach": {
+          "type": "array",
+          "description": "An array of objects representing skills the user can teach.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "verified": {
+                "type": "boolean",
+                "default": false
+              }
+            },
+            "required": [
+              "name"
+            ]
+          }
+        },
+        "skillsToLearn": {
+          "type": "array",
+          "description": "An array of objects representing skills the user wants to learn.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name"
+            ]
+          }
+        },
+        "onboardingCompleted": {
+          "type": "boolean",
+          "description": "Flag to indicate if the user has completed the onboarding process.",
+          "default": false
+        },
+        "socialLinks": {
+          "type": "object",
+          "description": "An object containing links to the user's social media profiles.",
+          "properties": {
+            "github": {
+              "type": "string",
+              "format": "uri"
+            },
+            "linkedin": {
+              "type": "string",
+              "format": "uri"
+            },
+            "website": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        },
+        "stats": {
+          "type": "object",
+          "description": "User statistics for gamification and tracking.",
+          "properties": {
+            "swapsCompleted": {
+              "type": "number",
+              "default": 0
+            },
+            "memberSince": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "email"
+      ]
+    },
+    "Skill": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Skill",
+      "type": "object",
+      "description": "Represents a skill that users can teach or learn.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the skill."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the skill (e.g., Python, Guitar)."
+        },
+        "description": {
+          "type": "string",
+          "description": "A brief description of the skill."
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "ChatMessage": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ChatMessage",
+      "type": "object",
+      "description": "Represents a single chat message between two users.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the chat message."
+        },
+        "members": {
+          "type": "array",
+          "description": "An array containing the two user UIDs participating in the chat. Used for security rules.",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "senderId": {
+          "type": "string",
+          "description": "The UID of the user who sent the message."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Timestamp of when the message was sent, used for ordering.",
+          "format": "date-time"
+        },
+        "content": {
+          "type": "string",
+          "description": "Content of the chat message."
+        },
+        "isRead": {
+          "type": "boolean",
+          "description": "Indicates if the message has been read by the recipient.",
+          "default": false
+        }
+      },
+      "required": [
+        "id",
+        "members",
+        "senderId",
+        "timestamp",
+        "content"
+      ]
+    },
+    "AvailabilitySlot": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "AvailabilitySlot",
+      "type": "object",
+      "description": "Represents a time slot when a user is available for a skill swap.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the availability slot."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the user who owns this availability slot. (Relationship: UserProfile 1:N AvailabilitySlot)"
+        },
+        "startTime": {
+          "type": "string",
+          "description": "Start time of the availability slot.",
+          "format": "date-time"
+        },
+        "endTime": {
+          "type": "string",
+          "description": "End time of the availability slot.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "startTime",
+        "endTime"
+      ]
+    },
+    "SkillPoint": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "SkillPoint",
+      "type": "object",
+      "description": "Represents skill points earned by a user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the skill point record."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the user who earned the skill points. (Relationship: UserProfile 1:N SkillPoint)"
+        },
+        "points": {
+          "type": "number",
+          "description": "Number of skill points earned."
+        },
+        "reason": {
+          "type": "string",
+          "description": "Reason for earning the skill points (e.g., successful swap)."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Timestamp of when the skill points were earned.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "points",
+        "reason",
+        "timestamp"
+      ]
+    },
+    "SkillSnippet": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "SkillSnippet",
+      "type": "object",
+      "description": "Represents a shared skill snippet within a chat message.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the skill snippet."
+        },
+        "skillId": {
+          "type": "string",
+          "description": "Reference to the skill associated with the snippet. (Relationship: Skill 1:N SkillSnippet)"
+        },
+        "projectId": {
+          "type": "string",
+          "description": "Identifier for the project associated with the snippet, if any."
+        },
+        "link": {
+          "type": "string",
+          "description": "Link to the project or skill resource.",
+          "format": "uri"
+        },
+        "description": {
+          "type": "string",
+          "description": "A brief description of the skill snippet."
+        }
+      },
+      "required": [
+        "id",
+        "skillId",
+        "link"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "google",
+      "password"
+    ]
+  },
+  "firestore": {
+    "structure": {
+      "/users/{userId}": {
+        "schema": {
+          "$ref": "#/backend/entities/UserProfile"
+        },
+        "description": "Stores user profile information. The document ID is the Firebase Auth UID."
+      },
+      "/users/{userId}/availabilitySlots/{availabilitySlotId}": {
+        "schema": {
+          "$ref": "#/backend/entities/AvailabilitySlot"
+        },
+        "description": "Stores availability slots for a user. Includes denormalized 'userId' for authorization independence."
+      },
+      "/users/{userId}/skillPoints/{skillPointId}": {
+        "schema": {
+          "$ref": "#/backend/entities/SkillPoint"
+        },
+        "description": "Stores skill points earned by a user. Includes denormalized 'userId' for authorization independence."
+      },
+      "/skills/{skillId}": {
+        "schema": {
+          "$ref": "#/backend/entities/Skill"
+        },
+        "description": "Stores information about available skills."
+      },
+      "/messages/{messageId}": {
+        "schema": {
+          "$ref": "#/backend/entities/ChatMessage"
+        },
+        "description": "Stores individual chat messages between users. Authorization is handled by checking membership in the message's 'members' array."
+      },
+      "/skillSnippets/{skillSnippetId}": {
+        "schema": {
+          "$ref": "#/backend/entities/SkillSnippet"
+        },
+        "description": "Stores skill snippets, which are shared within chat messages."
+      }
+    },
+    "reasoning": "The Firestore structure is designed to support DevSwap's core features with a focus on authorization independence and scalability. User profiles and their associated data (availability, skill points) are organized under the `/users/{userId}` path for clear ownership and easy security rule definition. Skills are stored in a top-level `/skills` collection, for efficient searching and retrieval. Chat messages are stored in a single top-level `/messages` collection, with authorization handled by a `members` array within each message document. This denormalization simplifies security rules for chat by eliminating the need for extra document reads.\n\n**Authorization Independence:** User-specific data (availability, skill points) is nested under `/users/{userId}`, ensuring that access control can be based solely on the `request.auth.uid` matching the `userId` path parameter. For chat messages, the `members` array within each `/messages/{messageId}` document is critical for securing access without needing a separate `/chats` collection.\n\n**QAPs (Rules are not Filters):**\n*   Secure `list` operations are enabled by the clear separation of user data and the use of path-based ownership for private data. Listing availability slots or skill points under `/users/{userId}` can be secured by verifying that `request.auth.uid == userId`.\n*   Listing chat messages requires a query with a `where('members', 'array-contains', request.auth.uid)` clause, which maps directly to a secure security rule.\n\n**Denormalization:**\nTo achieve authorization independence, important data like `userId` is duplicated in AvailabilitySlot and SkillPoint documents. The `members` array in each `ChatMessage` is a critical piece of denormalized data for securing access to chat messages.\n\n**Authentication Workflow:**\n\n1.  **Google Authentication**: The platform should authenticate users through Google Sign-In.\n2.  **User Creation**: Upon successful authentication, check if a `UserProfile` document exists in `/users/{uid}`. If not, create one, populating it from the auth data.\n3.  **Data Association**: All user-specific data is stored under the `/users/{uid}` path. This simplifies security rules because ownership can be verified by checking if `request.auth.uid == userId`."
+  }
+}
+
+    

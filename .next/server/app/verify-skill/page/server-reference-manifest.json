@@ -1,0 +1,16 @@
+{
+  "node": {
+    "40e8461a829cd843442aedd60f1f359c34c566b7a8": {
+      "workers": {
+        "app/verify-skill/page": {
+          "moduleId": "[project]/.next-internal/server/app/verify-skill/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/verify-skill-interactive.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/verify-skill/page": "action-browser"
+      }
+    }
+  },
+  "edge": {}
+}

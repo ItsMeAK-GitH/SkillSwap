@@ -1,0 +1,27 @@
+/* [project]/src/components/CurvedLoop.css [app-client] (css) */
+.curved-loop-jacket {
+  width: 100%;
+}
+
+.curved-loop-svg {
+  aspect-ratio: 100 / 12;
+  width: 100%;
+  fill: hsl(var(--muted-foreground));
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  text-transform: uppercase;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  transition: fill .3s;
+  display: block;
+  overflow: visible;
+}
+
+.curved-loop-jacket:hover .curved-loop-svg {
+  fill: hsl(var(--foreground));
+}
+
+
+/*# sourceMappingURL=src_components_CurvedLoop_2ccdce26.css.map*/

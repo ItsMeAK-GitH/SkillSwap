@@ -1,0 +1,119 @@
+
+/**
+ * @description: This ruleset enforces a strict user-ownership model for user profiles and associated data, while allowing public read access to skills and skill snippets. Chat message security relies on a 'members' array within each message document.
+ * @dataStructure:
+ *   - User profiles are stored under `/users/{userId}`, where `userId` is the Firebase Auth UID.
+ *   - User-specific data (availability slots, skill points) are nested under `/users/{userId}`.
+ *   - Skills are stored in the top-level `/skills/{skillId}` collection.
+ *   - Chat messages are stored in the top-level `/messages/{messageId}` collection.
+ *   - Skill snippets are stored in the top-level `/skillSnippets/{skillSnippetId}` collection.
+ * @keySecurityDecisions:
+ *   - User profiles are publicly readable to allow browsing the community.
+ *   - Chat messages can only be read by the users included in the message's `members` array.
+ *   - A user can only create messages where they are one of the members.
+ *   - Users can only update the `isRead` flag of messages they are a member of.
+ * @denormalizationForAuthorization:
+ *   - The `userId` is denormalized into `AvailabilitySlot` and `SkillPoint` documents to avoid extra reads during authorization.
+ *   - A `members` array is included in every `ChatMessage` document to secure read/write access without needing a separate `chats` collection.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * User Profiles
+     * - Anyone can read/list profiles to see the community.
+     * - Only the owner can create, update, or delete their own profile.
+     */
+    match /users/{userId} {
+      function isOwner() {
+        return request.auth.uid == userId;
+      }
+
+      allow get, list: if true;
+      allow write: if isSignedIn() && isOwner();
+    }
+
+    /**
+     * User-specific subcollections (Availability, Skill Points)
+     * - Only the owner of the parent profile can manage these documents.
+     */
+    match /users/{userId}/{subcollection}/{docId} {
+        function isOwner() {
+            return request.auth.uid == userId;
+        }
+
+        // The creating user must match the path and the data inside the document
+        function isCreatingOwner() {
+          return isOwner() && request.resource.data.userId == userId;
+        }
+
+        allow read, update, delete: if isSignedIn() && isOwner();
+        allow create: if isSignedIn() && isCreatingOwner();
+    }
+
+    /**
+     * Skills Collection
+     * - Publicly readable by anyone.
+     * - Writes are disallowed for now (e.g., admin-only).
+     */
+    match /skills/{skillId} {
+      allow get, list: if true;
+      allow write: if false; 
+    }
+    
+    /**
+     * Chat Messages Collection
+     * - Security is managed via a `members` array in each message document.
+     */
+    match /messages/{messageId} {
+      function isMember() {
+        return request.auth.uid in resource.data.members;
+      }
+
+      function isCreatingOwnMessage() {
+        // Rule for creating: user must be signed in, their UID must be in the new message's `members` array,
+        // and they must be the sender.
+        return isSignedIn() 
+                && request.auth.uid in request.resource.data.members
+                && request.resource.data.senderId == request.auth.uid;
+      }
+      
+      function isUpdatingReadStatus() {
+        // Rule for updating: user must be a member, and only the 'isRead' field can change.
+        return isMember()
+                && request.resource.data.keys().hasOnly(['isRead'])
+                && request.resource.data.isRead == true;
+      }
+      
+      // Allow read access only to members of the chat.
+      // This requires client-side queries to include `where('members', 'array-contains', request.auth.uid)`.
+      allow read: if isMember();
+
+      // Allow users to create messages if they are the sender and are listed as a member.
+      allow create: if isCreatingOwnMessage();
+
+      // Allow users to update only the isRead status to true.
+      allow update: if isUpdatingReadStatus();
+
+      // Users cannot delete messages.
+      allow delete: if false;
+    }
+
+    /**
+     * Skill Snippets Collection
+     * - Publicly readable by anyone.
+     * - Writes are disallowed for now (e.g., admin-only).
+     */
+    match /skillSnippets/{skillSnippetId} {
+      allow get, list: if true;
+      allow write: if false;
+    }
+  }
+}
+
+    

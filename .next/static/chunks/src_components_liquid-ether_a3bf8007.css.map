@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 1, "column": 0}, "map": {"version":3,"sources":["file:///home/user/studio/src/components/liquid-ether.css"],"sourcesContent":[".liquid-ether-container {\n  position: relative;\n  overflow: hidden;\n  width: 100%;\n  height: 100%;\n  touch-action: none;\n}\n"],"names":[],"mappings":"AAAA","debugId":null}}]
+}

@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 1, "column": 0}, "map": {"version":3,"sources":["turbopack:///[project]/src/components/TextType.css"],"sourcesContent":[".text-type {\n  display: inline-block;\n  white-space: pre-wrap;\n}\n\n.text-type__cursor {\n  margin-left: 0.25rem;\n  display: inline-block;\n  opacity: 1;\n}\n\n.text-type__cursor--hidden {\n  display: none;\n}\n"],"names":[],"mappings":"AAAA;;;;;AAKA;;;;;;AAMA"}}]
+}

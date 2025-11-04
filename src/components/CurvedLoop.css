@@ -1,0 +1,25 @@
+
+.curved-loop-jacket {
+  width: 100%;
+}
+
+.curved-loop-svg {
+  user-select: none;
+  width: 100%;
+  aspect-ratio: 100 / 12;
+  overflow: visible;
+  display: block;
+  font-size: 2rem;
+  fill: hsl(var(--muted-foreground));
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1;
+  transition: fill 0.3s ease;
+}
+
+.curved-loop-jacket:hover .curved-loop-svg {
+    fill: hsl(var(--foreground));
+}

@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 1, "column": 0}, "map": {"version":3,"sources":["turbopack:///[project]/src/components/ScrollStack.css"],"sourcesContent":[".scroll-stack-container {\n  position: relative;\n  width: 100%;\n}\n\n.scroll-stack-inner {\n  position: relative;\n}\n\n.scroll-stack-card {\n  transform-origin: center center;\n  will-change: transform;\n  box-shadow: 0 0 20px hsl(var(--primary) / 0.1), 0 10px 30px rgba(0, 0, 0, 0.2);\n  height: auto;\n  min-height: auto;\n  width: 100%;\n  margin: 30px 0;\n  padding: 2.5rem;\n  border-radius: 40px;\n  box-sizing: border-box;\n  position: sticky; /* <-- Important change */\n  background: hsl(var(--card) / 0.7);\n  backdrop-filter: blur(10px);\n  color: hsl(var(--card-foreground));\n  border: 1px solid hsl(var(--primary) / 0.3);\n}\n\n.scroll-stack-end-spacer {\n  height: 50vh; /* Adjust as needed */\n}\n"],"names":[],"mappings":"AAAA;;;;;AAKA;;;;AAIA;;;;;;;;;;;;;;;;;;AAkBA"}}]
+}

@@ -1,0 +1,30 @@
+.scroll-stack-container {
+  position: relative;
+  width: 100%;
+}
+
+.scroll-stack-inner {
+  position: relative;
+}
+
+.scroll-stack-card {
+  transform-origin: center center;
+  will-change: transform;
+  box-shadow: 0 0 20px hsl(var(--primary) / 0.1), 0 10px 30px rgba(0, 0, 0, 0.2);
+  height: auto;
+  min-height: auto;
+  width: 100%;
+  margin: 30px 0;
+  padding: 2.5rem;
+  border-radius: 40px;
+  box-sizing: border-box;
+  position: sticky; /* <-- Important change */
+  background: hsl(var(--card) / 0.7);
+  backdrop-filter: blur(10px);
+  color: hsl(var(--card-foreground));
+  border: 1px solid hsl(var(--primary) / 0.3);
+}
+
+.scroll-stack-end-spacer {
+  height: 50vh; /* Adjust as needed */
+}

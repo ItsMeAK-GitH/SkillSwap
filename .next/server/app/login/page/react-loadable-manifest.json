@@ -1,0 +1,11 @@
+{
+  "[project]/src/components/liquid-ether.tsx [app-client] (ecmascript, next/dynamic entry)": {
+    "id": "[project]/src/components/liquid-ether.tsx [app-client] (ecmascript, next/dynamic entry)",
+    "files": [
+      "static/chunks/node_modules_three_build_three_module_7d17ea5c.js",
+      "static/chunks/src_components_liquid-ether_tsx_62da3364._.js",
+      "static/chunks/src_components_liquid-ether_a3bf8007.css",
+      "static/chunks/src_components_liquid-ether_tsx_19532e09._.js"
+    ]
+  }
+}

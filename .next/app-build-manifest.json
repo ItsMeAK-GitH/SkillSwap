@@ -1,0 +1,29 @@
+{
+  "pages": {
+    "/page": [
+      "static/chunks/src_f2cd823c._.css",
+      "static/chunks/src_components_liquid-ether_tsx_33fbfeb1._.js",
+      "static/chunks/node_modules_next_dist_e4839f4a._.js",
+      "static/chunks/d9ef2_@firebase_auth_dist_esm2017_c7e04ad1._.js",
+      "static/chunks/node_modules_@firebase_firestore_dist_index_esm2017_c2fcaa2e.js",
+      "static/chunks/node_modules_gsap_8ed0561d._.js",
+      "static/chunks/node_modules_50de729f._.js",
+      "static/chunks/src_28657bfa._.js",
+      "static/chunks/src_app_layout_tsx_c0237562._.js",
+      "static/chunks/src_100f10a1._.js",
+      "static/chunks/node_modules_framer-motion_dist_es_16fc3868._.js",
+      "static/chunks/node_modules_react-icons_si_index_mjs_4ff16b17._.js",
+      "static/chunks/node_modules_react-icons_lib_74ccc930._.js",
+      "static/chunks/node_modules_06b04f01._.js",
+      "static/chunks/src_components_739e48e0._.css",
+      "static/chunks/src_app_page_tsx_90233e98._.js",
+      "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_fd44f5a4._.js",
+      "static/chunks/node_modules_next_dist_compiled_2ce9398a._.js",
+      "static/chunks/node_modules_next_dist_client_8f19e6fb._.js",
+      "static/chunks/node_modules_next_dist_2ecbf5fa._.js",
+      "static/chunks/node_modules_@swc_helpers_cjs_00636ac3._.js",
+      "static/chunks/_e69f0d32._.js",
+      "static/chunks/_93808211._.js"
+    ]
+  }
+}

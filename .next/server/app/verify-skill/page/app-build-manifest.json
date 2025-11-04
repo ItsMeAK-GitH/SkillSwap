@@ -1,0 +1,23 @@
+{
+  "pages": {
+    "/verify-skill/page": [
+      "static/chunks/node_modules_next_d90e3b67._.js",
+      "static/chunks/d9ef2_@firebase_auth_dist_esm2017_c7e04ad1._.js",
+      "static/chunks/node_modules_@firebase_firestore_dist_index_esm2017_c2fcaa2e.js",
+      "static/chunks/node_modules_2100a288._.js",
+      "static/chunks/src_797da039._.js",
+      "static/chunks/src_app_globals_b805903d.css",
+      "static/chunks/src_app_layout_tsx_c0237562._.js",
+      "static/chunks/src_8803dad9._.js",
+      "static/chunks/node_modules_a11747a4._.js",
+      "static/chunks/src_app_verify-skill_page_tsx_25ae811c._.js",
+      "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_fd44f5a4._.js",
+      "static/chunks/node_modules_next_dist_compiled_2ce9398a._.js",
+      "static/chunks/node_modules_next_dist_client_8f19e6fb._.js",
+      "static/chunks/node_modules_next_dist_2ecbf5fa._.js",
+      "static/chunks/node_modules_@swc_helpers_cjs_00636ac3._.js",
+      "static/chunks/_e69f0d32._.js",
+      "static/chunks/_93808211._.js"
+    ]
+  }
+}

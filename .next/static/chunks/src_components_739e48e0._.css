@@ -1,0 +1,197 @@
+/* [project]/src/components/CurvedLoop.css [app-client] (css) */
+.curved-loop-jacket {
+  width: 100%;
+}
+
+.curved-loop-svg {
+  aspect-ratio: 100 / 12;
+  width: 100%;
+  fill: hsl(var(--muted-foreground));
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  text-transform: uppercase;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  transition: fill .3s;
+  display: block;
+  overflow: visible;
+}
+
+.curved-loop-jacket:hover .curved-loop-svg {
+  fill: hsl(var(--foreground));
+}
+
+
+/* [project]/src/components/TextType.css [app-client] (css) */
+.text-type {
+  white-space: pre-wrap;
+  display: inline-block;
+}
+
+.text-type__cursor {
+  opacity: 1;
+  margin-left: .25rem;
+  display: inline-block;
+}
+
+.text-type__cursor--hidden {
+  display: none;
+}
+
+
+/* [project]/src/components/LogoLoop.css [app-client] (css) */
+.logoloop {
+  --logoloop-gap: 32px;
+  --logoloop-logoHeight: 28px;
+  --logoloop-fadeColorAuto: #fff;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.logoloop--scale-hover {
+  padding-top: calc(var(--logoloop-logoHeight) * .1);
+  padding-bottom: calc(var(--logoloop-logoHeight) * .1);
+}
+
+@media (prefers-color-scheme: dark) {
+  .logoloop {
+    --logoloop-fadeColorAuto: #0b0b0b;
+  }
+}
+
+.logoloop__track {
+  will-change: transform;
+  user-select: none;
+  width: max-content;
+  display: flex;
+}
+
+.logoloop__list {
+  align-items: center;
+  display: flex;
+}
+
+.logoloop__item {
+  margin-right: var(--logoloop-gap);
+  font-size: var(--logoloop-logoHeight);
+  flex: none;
+  line-height: 1;
+}
+
+.logoloop__item:last-child {
+  margin-right: var(--logoloop-gap);
+}
+
+.logoloop__node {
+  align-items: center;
+  display: inline-flex;
+}
+
+.logoloop__item img {
+  height: var(--logoloop-logoHeight);
+  object-fit: contain;
+  width: auto;
+  image-rendering: -webkit-optimize-contrast;
+  -webkit-user-drag: none;
+  pointer-events: none;
+  transition: transform .3s cubic-bezier(.4, 0, .2, 1);
+  display: block;
+}
+
+.logoloop--scale-hover .logoloop__item {
+  overflow: visible;
+}
+
+.logoloop--scale-hover .logoloop__item:hover img, .logoloop--scale-hover .logoloop__item:hover .logoloop__node {
+  transform-origin: center;
+  transform: scale(1.2);
+}
+
+.logoloop--scale-hover .logoloop__node {
+  transition: transform .3s cubic-bezier(.4, 0, .2, 1);
+}
+
+.logoloop__link {
+  border-radius: 4px;
+  align-items: center;
+  text-decoration: none;
+  transition: opacity .2s;
+  display: inline-flex;
+}
+
+.logoloop__link:hover {
+  opacity: .8;
+}
+
+.logoloop__link:focus-visible {
+  outline-offset: 2px;
+  outline: 2px solid;
+}
+
+.logoloop--fade:before, .logoloop--fade:after {
+  content: "";
+  pointer-events: none;
+  z-index: 1;
+  width: clamp(24px, 8%, 120px);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+
+.logoloop--fade:before {
+  background: linear-gradient(to right, var(--logoloop-fadeColor, var(--logoloop-fadeColorAuto)) 0%, #0000 100%);
+  left: 0;
+}
+
+.logoloop--fade:after {
+  background: linear-gradient(to left, var(--logoloop-fadeColor, var(--logoloop-fadeColorAuto)) 0%, #0000 100%);
+  right: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logoloop__track {
+    transform: translate3d(0, 0, 0) !important;
+  }
+
+  .logoloop__item img, .logoloop__node {
+    transition: none !important;
+  }
+}
+
+
+/* [project]/src/components/ScrollStack.css [app-client] (css) */
+.scroll-stack-container {
+  width: 100%;
+  position: relative;
+}
+
+.scroll-stack-inner {
+  position: relative;
+}
+
+.scroll-stack-card {
+  transform-origin: center;
+  will-change: transform;
+  box-shadow: 0 0 20px hsl(var(--primary) / .1), 0 10px 30px #0003;
+  box-sizing: border-box;
+  background: hsl(var(--card) / .7);
+  backdrop-filter: blur(10px);
+  width: 100%;
+  height: auto;
+  min-height: auto;
+  color: hsl(var(--card-foreground));
+  border: 1px solid hsl(var(--primary) / .3);
+  border-radius: 40px;
+  margin: 30px 0;
+  padding: 2.5rem;
+  position: sticky;
+}
+
+.scroll-stack-end-spacer {
+  height: 50vh;
+}
+
+
+/*# sourceMappingURL=src_components_739e48e0._.css.map*/
