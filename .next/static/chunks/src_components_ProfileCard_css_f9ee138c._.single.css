@@ -112,7 +112,7 @@
 .pc-shine, .pc-shine:after {
   --space: 5%;
   --angle: -45deg;
-  z-index: 3;
+  z-index: 1;
   background: center / cover;
   background-image: repeating-linear-gradient(0deg, var(--sunpillar-clr-1) calc(var(--space) * 1), var(--sunpillar-clr-2) calc(var(--space) * 2), var(--sunpillar-clr-3) calc(var(--space) * 3), var(--sunpillar-clr-4) calc(var(--space) * 4), var(--sunpillar-clr-5) calc(var(--space) * 5), var(--sunpillar-clr-6) calc(var(--space) * 6), var(--sunpillar-clr-1) calc(var(--space) * 7)), repeating-linear-gradient(var(--angle), #0e152e 0%, #8fa3a3 3.8%, #8fc1c1 4.5%, #8fa3a3 5.2%, #0e152e 10%, #0e152e 12%), radial-gradient(farthest-corner circle at var(--pointer-x) var(--pointer-y), #0000001a 12%, #00000026 20%, #00000040 120%);
   background-position: 0 var(--background-y), var(--background-x) var(--background-y), center;
@@ -166,27 +166,33 @@
 }
 
 .pc-avatar-content {
-  mix-blend-mode: screen;
-  overflow: hidden;
+  background-position: bottom;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-image: var(--avatar-image);
+  z-index: 2;
+  transform: translate3d(calc(var(--pointer-from-left) * -12px + 6px), calc(var(--pointer-from-top) * -12px + 6px), 10px);
+  inset: -10% 0 -5%;
+  overflow: visible;
 }
 
 .pc-avatar-content:before {
   content: "";
   z-index: 1;
-  backdrop-filter: blur(20px);
   pointer-events: none;
   position: absolute;
   inset: 0;
-  mask: linear-gradient(#0000 0% 60%, #000 90% 100%);
+  mask: linear-gradient(#0000 0% 20%, #000 40% 100%);
 }
 
 .pc-user-info {
-  z-index: 2;
+  z-index: 5;
   background: hsl(var(--foreground) / .05);
   backdrop-filter: blur(10px);
   border: 1px solid hsl(var(--foreground) / .1);
   pointer-events: auto;
   box-shadow: 0 4px 15px hsl(var(--background) / .2);
+  transform: translate3d(calc(var(--pointer-from-left) * -8px + 4px), calc(var(--pointer-from-top) * -8px + 4px), 35px);
   border-radius: 15px;
   justify-content: space-between;
   align-items: center;
@@ -268,7 +274,7 @@
   padding: 1rem;
   position: relative;
   overflow: hidden;
-  transform: translate3d(calc(var(--pointer-from-left) * -24px + 12px), calc(var(--pointer-from-top) * -24px + 12px), 20px) !important;
+  transform: translate3d(calc(var(--pointer-from-left) * -32px + 16px), calc(var(--pointer-from-top) * -32px + 16px), 50px) !important;
 }
 
 .pc-details {
@@ -284,7 +290,7 @@
 
 .pc-details h3 {
   color: #fff;
-  text-shadow: 0 2px 4px hsl(var(--primary) / .3);
+  text-shadow: 0 4px 10px hsl(var(--primary) / .5);
   margin: 0;
   font-size: clamp(1.5rem, 5svh, 2.5em);
   font-weight: 600;

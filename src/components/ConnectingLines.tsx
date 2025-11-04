@@ -26,7 +26,6 @@ const ConnectingLines = ({ numElements, sourceElementId, elementClassName }: Con
       const targetEls = document.getElementsByClassName(elementClassName) as HTMLCollectionOf<HTMLElement>;
       
       if (!sourceEl || targetEls.length !== numElements) {
-        // Retry if elements are not yet in the DOM
         requestAnimationFrame(calculateLines);
         return;
       }
@@ -38,21 +37,23 @@ const ConnectingLines = ({ numElements, sourceElementId, elementClassName }: Con
       const sourceRect = sourceEl.getBoundingClientRect();
       
       const sourceX = sourceRect.left + sourceRect.width / 2 - svgRect.left;
-      const sourceY = sourceRect.top + sourceRect.height / 2 - svgRect.top;
+      const sourceY = sourceRect.bottom - svgRect.top; // Start from bottom of photo
 
       const newLines: Line[] = [];
+      
+      // Define a junction point below the source photo
+      const junctionY = sourceY + 50;
 
       for (let i = 0; i < targetEls.length; i++) {
         const targetEl = targetEls[i];
         const targetRect = targetEl.getBoundingClientRect();
         
         const targetX = targetRect.left + targetRect.width / 2 - svgRect.left;
-        const targetY = targetRect.top - svgRect.top; // Connect to the top-middle of the card
+        const targetY = targetRect.top - svgRect.top;
 
-        // Create a simple path with a slight curve for aesthetic
-        const d = `M ${sourceX} ${sourceY} Q ${sourceX} ${sourceY - 100}, ${targetX} ${targetY}`;
-        
-        // Create a temporary path element to measure its length for the animation
+        // Path: 1. Straight down from source. 2. Smooth curve to target.
+        const d = `M ${sourceX} ${sourceY} L ${sourceX} ${junctionY} C ${sourceX} ${junctionY + 50}, ${targetX} ${junctionY}, ${targetX} ${targetY}`;
+
         const tempPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         tempPath.setAttribute('d', d);
         const length = tempPath.getTotalLength();
@@ -67,10 +68,8 @@ const ConnectingLines = ({ numElements, sourceElementId, elementClassName }: Con
       setLines(newLines);
     };
 
-    // Initial calculation
     calculateLines();
 
-    // Recalculate on window resize
     window.addEventListener('resize', calculateLines);
     return () => window.removeEventListener('resize', calculateLines);
   }, [numElements, sourceElementId, elementClassName]);
@@ -94,7 +93,7 @@ const ConnectingLines = ({ numElements, sourceElementId, elementClassName }: Con
             className="connecting-line"
             strokeDasharray={line.length}
             strokeDashoffset={line.length}
-            style={{ animationDelay: `${index * 0.2}s` }}
+            style={{ animationDelay: `${index * 0.15}s` }} // Stagger the animation
           />
         ))}
       </g>
