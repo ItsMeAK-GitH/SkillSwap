@@ -690,6 +690,10 @@ body {
   margin-top: 6rem;
 }
 
+.mb-24 {
+  margin-bottom: 6rem;
+}
+
 .block {
   display: block;
 }
