@@ -1,6 +1,6 @@
 
 import Link from 'next/link';
-import { GitPullRequest } from 'lucide-react';
+import { GitPullRequest, Users } from 'lucide-react';
 import CurvedLoop from '../CurvedLoop';
 
 export default function Footer() {
@@ -35,9 +35,14 @@ export default function Footer() {
         </div>
 
         <p className="text-sm">&copy; 2025 DevSwap. All rights reserved.</p>
-        <div className="flex justify-center gap-4 mt-4">
-          <Link href="#" className="hover:text-primary transition-colors text-xs">Privacy Policy</Link>
-          <Link href="#" className="hover:text-primary transition-colors text-xs">Terms of Service</Link>
+        <div className="flex justify-center gap-4 mt-4 text-xs">
+          <Link href="#" className="hover:text-primary transition-colors cursor-target">Privacy Policy</Link>
+          <span className="opacity-50">|</span>
+          <Link href="/team" className="hover:text-primary transition-colors cursor-target flex items-center gap-1">
+            <Users className="w-3 h-3" /> Meet the Team
+          </Link>
+          <span className="opacity-50">|</span>
+          <Link href="#" className="hover:text-primary transition-colors cursor-target">Terms of Service</Link>
         </div>
       </div>
     </footer>
