@@ -9,21 +9,21 @@ const teamMembers = [
     name: 'Akshith Rajesh',
     title: 'Full-Stack & AI Architect',
     handle: 'ItsMeAK-GitH',
-    avatarUrl: '/akshith.png',
+    avatarUrl: '/team/akshith.png',
     contactLink: 'https://github.com/ItsMeAK-GitH'
   },
   {
     name: 'Akhilan VTM',
     title: 'Frontend & UI/UX Specialist',
     handle: 'akhilanvtm',
-    avatarUrl: '/akhilan.png',
+    avatarUrl: '/team/akhilan.png',
     contactLink: 'https://github.com/akhilanvtm'
   },
   {
     name: 'Sanjeev TS',
     title: 'Backend & DevOps Engineer',
     handle: 'sanjeev-ts',
-    avatarUrl: '/sanjeev.png',
+    avatarUrl: '/team/sanjeev.png',
     contactLink: 'https://github.com/sanjeev-ts'
   },
 ];
