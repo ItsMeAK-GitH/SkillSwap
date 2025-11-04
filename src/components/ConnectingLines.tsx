@@ -52,7 +52,7 @@ const ConnectingLines = ({ numElements, sourceElementId, elementClassName }: Con
         const targetY = targetRect.top - svgRect.top;
 
         // Path: 1. Straight down from source. 2. Smooth curve to target.
-        const d = `M ${sourceX} ${sourceY} L ${sourceX} ${junctionY} C ${sourceX} ${junctionY + 50}, ${targetX} ${junctionY}, ${targetX} ${targetY}`;
+        const d = `M ${sourceX} ${sourceY} L ${sourceX} ${junctionY} C ${sourceX} ${junctionY + 50}, ${targetX} ${junctionY + 50}, ${targetX} ${targetY}`;
 
         const tempPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         tempPath.setAttribute('d', d);
@@ -68,10 +68,13 @@ const ConnectingLines = ({ numElements, sourceElementId, elementClassName }: Con
       setLines(newLines);
     };
 
-    calculateLines();
-
+    const debounce = setTimeout(calculateLines, 100);
+    
     window.addEventListener('resize', calculateLines);
-    return () => window.removeEventListener('resize', calculateLines);
+    return () => {
+        clearTimeout(debounce);
+        window.removeEventListener('resize', calculateLines);
+    }
   }, [numElements, sourceElementId, elementClassName]);
 
   return (
