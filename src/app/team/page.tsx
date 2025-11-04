@@ -3,6 +3,7 @@
 
 import Header from '@/components/layout/header';
 import ProfileCard from '@/components/ProfileCard';
+import Image from 'next/image';
 
 const teamMembers = [
   {
@@ -70,6 +71,21 @@ export default function TeamPage() {
               ))}
             </div>
           </div>
+
+          <div className="mt-24">
+            <div className="max-w-5xl mx-auto">
+              <div className="relative aspect-[16/9] rounded-2xl overflow-hidden shadow-2xl shadow-primary/20 border border-primary/30">
+                <Image
+                  src="/team/team.png"
+                  alt="DevSwap Team Photo"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  unoptimized // Use this if the image is already optimized or you want to avoid Next.js processing
+                />
+              </div>
+            </div>
+          </div>
+
         </div>
       </main>
     </div>
