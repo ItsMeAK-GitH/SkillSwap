@@ -79,7 +79,7 @@ export default function TeamPage() {
                       status="Building"
                       contactText="GitHub"
                       avatarUrl={member.avatarUrl}
-                      showUserInfo={false}
+                      showUserInfo={true}
                       enableTilt={true}
                       onContactClick={(e: React.MouseEvent) => {
                         e.preventDefault();
