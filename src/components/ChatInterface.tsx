@@ -2,22 +2,31 @@
 
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { useCollection, useFirestore, useMemoFirebase, errorEmitter, FirestorePermissionError } from '@/firebase';
-import { collection, addDoc, serverTimestamp, query, where, doc, writeBatch } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, query, where, doc, writeBatch, updateDoc } from 'firebase/firestore';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Send, Loader2, Calendar as CalendarIcon } from 'lucide-react';
+import { Send, Loader2, Calendar as CalendarIcon, Check } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { User } from 'firebase/auth';
-import { format, formatDistanceToNow } from 'date-fns';
+import { format, formatDistanceToNow, parseISO } from 'date-fns';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
+interface ScheduleDetails {
+    type: 'schedule';
+    proposerId: string;
+    date: string; // ISO string
+    title: string;
+    meetLink: string;
+    status: 'pending' | 'accepted';
+}
+
 interface ChatMessage {
     id?: string;
     senderId: string;
-    content: string;
+    content: string | ScheduleDetails;
     timestamp: any; 
     members: string[];
     isRead: boolean;
@@ -39,7 +48,7 @@ function getInitials(name: string | null | undefined) {
     return name.split(' ').map(n => n[0]).join('');
 }
 
-function SchedulePopover({ onScheduleSend }: { onScheduleSend: (message: string) => void }) {
+function SchedulePopover({ onScheduleSend, currentUser, otherUser }: { onScheduleSend: (content: ScheduleDetails) => void; currentUser: User; otherUser: OtherUser; }) {
     const [date, setDate] = useState<Date | undefined>(new Date());
     const [hour, setHour] = useState<string>('12');
     const [minute, setMinute] = useState<string>('00');
@@ -48,10 +57,25 @@ function SchedulePopover({ onScheduleSend }: { onScheduleSend: (message: string)
     const handleScheduleSend = () => {
         if (!date) return;
         
-        const formattedDate = format(date, 'EEEE, MMMM do');
+        let hours = parseInt(hour, 10);
+        if (ampm === 'PM' && hours < 12) hours += 12;
+        if (ampm === 'AM' && hours === 12) hours = 0;
+        
+        date.setHours(hours);
+        date.setMinutes(parseInt(minute, 10));
+
         const meetLink = `https://meet.google.com/lookup/${Math.random().toString(36).substring(2, 12)}`;
-        const message = `Let's meet on ${formattedDate} at ${hour}:${minute} ${ampm}. Join here: ${meetLink}`;
-        onScheduleSend(message);
+        
+        const scheduleDetails: ScheduleDetails = {
+            type: 'schedule',
+            proposerId: currentUser.uid,
+            title: `Skill Swap: ${currentUser.displayName} & ${otherUser.name}`,
+            date: date.toISOString(),
+            meetLink: meetLink,
+            status: 'pending'
+        };
+
+        onScheduleSend(scheduleDetails);
     };
 
     const hours = Array.from({ length: 12 }, (_, i) => (i + 1).toString().padStart(2, '0'));
@@ -98,6 +122,56 @@ function SchedulePopover({ onScheduleSend }: { onScheduleSend: (message: string)
         </Popover>
     );
 }
+
+const isSchedule = (content: any): content is ScheduleDetails => {
+  return content?.type === 'schedule';
+};
+
+const ScheduleCard = ({ msg, currentUser }: { msg: ChatMessage, currentUser: User }) => {
+    const firestore = useFirestore();
+    const details = msg.content as ScheduleDetails;
+    const isReceiver = currentUser.uid !== details.proposerId;
+
+    const handleAccept = async () => {
+        if (!msg.id || !firestore) return;
+        const msgRef = doc(firestore, 'messages', msg.id);
+        const newContent = { ...details, status: 'accepted' };
+        try {
+            await updateDoc(msgRef, { content: newContent });
+        } catch (err) {
+            const permissionError = new FirestorePermissionError({
+                path: msgRef.path,
+                operation: 'update',
+                requestResourceData: { content: newContent },
+            });
+            errorEmitter.emit('permission-error', permissionError);
+        }
+    };
+    
+    const parsedDate = parseISO(details.date);
+
+    return (
+        <div className="p-4 rounded-lg bg-muted/50 border border-border/50 max-w-sm">
+            <h4 className="font-bold text-lg mb-2">{details.title}</h4>
+            <div className="space-y-2 text-sm">
+                <p><strong>When:</strong> {format(parsedDate, 'PPPP p')}</p>
+                <a href={details.meetLink} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline block truncate">
+                    <strong>Meet Link:</strong> {details.meetLink}
+                </a>
+            </div>
+             {isReceiver && details.status === 'pending' && (
+                <Button onClick={handleAccept} className="w-full mt-4">
+                    <Check className="mr-2" /> Accept Request
+                </Button>
+            )}
+            {details.status === 'accepted' && (
+                <div className="mt-4 text-center text-sm font-semibold text-green-400 bg-green-500/10 py-2 rounded-md">
+                    Meeting Confirmed
+                </div>
+            )}
+        </div>
+    );
+};
 
 
 export default function ChatInterface({ currentUser, otherUser }: ChatInterfaceProps) {
@@ -152,14 +226,15 @@ export default function ChatInterface({ currentUser, otherUser }: ChatInterfaceP
         }
     }, [messages, firestore, currentUser, otherUser.id]);
 
-    const sendMessage = async (content: string) => {
-        if (!content.trim() || !currentUser) return;
+    const sendMessage = async (content: string | ScheduleDetails) => {
+        if (typeof content === 'string' && !content.trim()) return;
+        if (!currentUser) return;
 
         setIsSending(true);
 
         const messageData = {
             senderId: currentUser.uid,
-            content: content.trim(),
+            content: typeof content === 'string' ? content.trim() : content,
             timestamp: serverTimestamp(),
             members: [currentUser.uid, otherUser.id].sort(),
             isRead: false,
@@ -215,12 +290,16 @@ export default function ChatInterface({ currentUser, otherUser }: ChatInterfaceP
                                 </Avatar>
                             )}
                             <div className="flex flex-col max-w-xs md:max-w-md">
-                                <div className={cn(
-                                    'rounded-lg px-4 py-2 text-sm',
-                                    isCurrentUser ? 'bg-primary text-primary-foreground rounded-br-none' : 'bg-muted rounded-bl-none'
-                                )}>
-                                    {msg.content}
-                                </div>
+                                {isSchedule(msg.content) ? (
+                                    <ScheduleCard msg={msg} currentUser={currentUser} />
+                                ) : (
+                                    <div className={cn(
+                                        'rounded-lg px-4 py-2 text-sm',
+                                        isCurrentUser ? 'bg-primary text-primary-foreground rounded-br-none' : 'bg-muted rounded-bl-none'
+                                    )}>
+                                        {msg.content}
+                                    </div>
+                                )}
                                 <span className={cn(
                                     'text-xs text-muted-foreground mt-1',
                                      isCurrentUser ? 'text-right' : 'text-left'
@@ -241,7 +320,7 @@ export default function ChatInterface({ currentUser, otherUser }: ChatInterfaceP
             </div>
             <div className="p-4 border-t border-border/50">
                 <form onSubmit={handleFormSubmit} className="flex items-center gap-2">
-                    <SchedulePopover onScheduleSend={sendMessage} />
+                    <SchedulePopover onScheduleSend={sendMessage} currentUser={currentUser} otherUser={otherUser} />
                     <Input
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}

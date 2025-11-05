@@ -11,7 +11,7 @@
  *   - User profiles are publicly readable to allow browsing the community.
  *   - Chat messages can only be read by the users included in the message's `members` array.
  *   - A user can only create messages where they are one of the members.
- *   - Users can only update the `isRead` flag of messages they are a member of.
+ *   - Users can only update messages they are a member of.
  * @denormalizationForAuthorization:
  *   - The `userId` is denormalized into `AvailabilitySlot` and `SkillPoint` documents to avoid extra reads during authorization.
  *   - A `members` array is included in every `ChatMessage` document to secure read/write access without needing a separate `chats` collection.
@@ -83,11 +83,9 @@ service cloud.firestore {
                 && request.resource.data.senderId == request.auth.uid;
       }
       
-      function isUpdatingReadStatus() {
-        // Rule for updating: user must be a member, and only the 'isRead' field can change.
-        return isMember()
-                && request.resource.data.keys().hasOnly(['isRead'])
-                && request.resource.data.isRead == true;
+      function isUpdatingMessage() {
+        // A member can update a message, for things like read status or event status
+        return isSignedIn() && request.auth.uid in resource.data.members;
       }
       
       // Allow read access only to members of the chat.
@@ -97,8 +95,8 @@ service cloud.firestore {
       // Allow users to create messages if they are the sender and are listed as a member.
       allow create: if isCreatingOwnMessage();
 
-      // Allow users to update only the isRead status to true.
-      allow update: if isUpdatingReadStatus();
+      // Allow users to update messages they are a member of.
+      allow update: if isUpdatingMessage();
 
       // Users cannot delete messages.
       allow delete: if false;
@@ -115,5 +113,3 @@ service cloud.firestore {
     }
   }
 }
-
-    
