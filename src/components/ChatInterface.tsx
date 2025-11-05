@@ -55,6 +55,11 @@ function SchedulePopover({ onScheduleSend, currentUser, otherUser }: { onSchedul
     const [minute, setMinute] = useState<string>('00');
     const [ampm, setAmpm] = useState<string>('PM');
 
+    const generateMeetLink = () => {
+        const randomString = () => Math.random().toString(36).substring(2, 5);
+        return `https://meet.google.com/devswap-${randomString()}-${randomString()}`;
+    };
+
     const handleScheduleSend = () => {
         if (!date) return;
         
@@ -65,7 +70,7 @@ function SchedulePopover({ onScheduleSend, currentUser, otherUser }: { onSchedul
         date.setHours(hours);
         date.setMinutes(parseInt(minute, 10));
 
-        const meetLink = `https://meet.google.com/new`;
+        const meetLink = generateMeetLink();
         
         const scheduleDetails: ScheduleDetails = {
             type: 'schedule',
