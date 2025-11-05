@@ -998,6 +998,14 @@ body {
   width: 100%;
 }
 
+.w-\[80px\] {
+  width: 80px;
+}
+
+.w-auto {
+  width: auto;
+}
+
 .min-w-0 {
   min-width: 0;
 }

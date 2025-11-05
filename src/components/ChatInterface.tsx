@@ -2,14 +2,17 @@
 
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { useCollection, useFirestore, useMemoFirebase, errorEmitter, FirestorePermissionError } from '@/firebase';
-import { collection, addDoc, serverTimestamp, query, where, doc, writeBatch, orderBy } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, query, where, doc, writeBatch } from 'firebase/firestore';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Send, Loader2 } from 'lucide-react';
+import { Send, Loader2, Calendar as CalendarIcon } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { User } from 'firebase/auth';
-import { formatDistanceToNow } from 'date-fns';
+import { format, formatDistanceToNow } from 'date-fns';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface ChatMessage {
     id?: string;
@@ -36,15 +39,74 @@ function getInitials(name: string | null | undefined) {
     return name.split(' ').map(n => n[0]).join('');
 }
 
+function SchedulePopover({ onScheduleSend }: { onScheduleSend: (message: string) => void }) {
+    const [date, setDate] = useState<Date | undefined>(new Date());
+    const [hour, setHour] = useState<string>('12');
+    const [minute, setMinute] = useState<string>('00');
+    const [ampm, setAmpm] = useState<string>('PM');
+
+    const handleScheduleSend = () => {
+        if (!date) return;
+        
+        const formattedDate = format(date, 'EEEE, MMMM do');
+        const meetLink = `https://meet.google.com/lookup/${Math.random().toString(36).substring(2, 12)}`;
+        const message = `Let's meet on ${formattedDate} at ${hour}:${minute} ${ampm}. Join here: ${meetLink}`;
+        onScheduleSend(message);
+    };
+
+    const hours = Array.from({ length: 12 }, (_, i) => (i + 1).toString().padStart(2, '0'));
+    const minutes = Array.from({ length: 60 / 5 }, (_, i) => (i * 5).toString().padStart(2, '0'));
+
+    return (
+        <Popover>
+            <PopoverTrigger asChild>
+                <Button variant="ghost" size="icon">
+                    <CalendarIcon className="h-5 w-5" />
+                    <span className="sr-only">Schedule a meeting</span>
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-4">
+                <div className="space-y-4">
+                    <h4 className="font-medium text-center">Schedule a Swap</h4>
+                    <Calendar
+                        mode="single"
+                        selected={date}
+                        onSelect={setDate}
+                        initialFocus
+                        className="rounded-md border"
+                    />
+                    <div className="flex justify-center gap-2">
+                        <Select value={hour} onValueChange={setHour}>
+                            <SelectTrigger className="w-[80px]"><SelectValue /></SelectTrigger>
+                            <SelectContent>{hours.map(h => <SelectItem key={h} value={h}>{h}</SelectItem>)}</SelectContent>
+                        </Select>
+                        <Select value={minute} onValueChange={setMinute}>
+                            <SelectTrigger className="w-[80px]"><SelectValue /></SelectTrigger>
+                            <SelectContent>{minutes.map(m => <SelectItem key={m} value={m}>{m}</SelectItem>)}</SelectContent>
+                        </Select>
+                        <Select value={ampm} onValueChange={setAmpm}>
+                            <SelectTrigger className="w-[80px]"><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="AM">AM</SelectItem>
+                                <SelectItem value="PM">PM</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <Button onClick={handleScheduleSend} className="w-full">Schedule & Send</Button>
+                </div>
+            </PopoverContent>
+        </Popover>
+    );
+}
+
+
 export default function ChatInterface({ currentUser, otherUser }: ChatInterfaceProps) {
     const firestore = useFirestore();
     const [newMessage, setNewMessage] = useState('');
     const [isSending, setIsSending] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
-    // This query is now valid according to the security rules.
-    // It fetches all message groups the user is a member of.
-    const messagesQuery = useMemoFirebase(() => {
+    const allMessagesQuery = useMemoFirebase(() => {
         if (!currentUser) return null;
         return query(
             collection(firestore, 'messages'),
@@ -52,21 +114,17 @@ export default function ChatInterface({ currentUser, otherUser }: ChatInterfaceP
         );
     }, [firestore, currentUser]);
 
-    const { data: fetchedMessages, isLoading: isLoadingMessages, error: messagesError } = useCollection<ChatMessage>(messagesQuery);
+    const { data: fetchedMessages, isLoading: isLoadingMessages, error: messagesError } = useCollection<ChatMessage>(allMessagesQuery);
     
-    // Client-side filtering and sorting
     const messages = useMemo(() => {
         if (!fetchedMessages) return [];
-        // 1. Filter for messages relevant to this specific chat
-        const relevantMessages = fetchedMessages.filter(msg => 
-            msg.members.includes(otherUser.id)
-        );
-        // 2. Sort the relevant messages by timestamp
-        return [...relevantMessages].sort((a, b) => {
-            const dateA = a.timestamp?.toDate ? a.timestamp.toDate().getTime() : 0;
-            const dateB = b.timestamp?.toDate ? b.timestamp.toDate().getTime() : 0;
-            return dateA - dateB;
-        });
+        return fetchedMessages
+            .filter(msg => msg.members.includes(otherUser.id))
+            .sort((a, b) => {
+                const dateA = a.timestamp?.toDate ? a.timestamp.toDate().getTime() : 0;
+                const dateB = b.timestamp?.toDate ? b.timestamp.toDate().getTime() : 0;
+                return dateA - dateB;
+            });
     }, [fetchedMessages, otherUser.id]);
     
     useEffect(() => {
@@ -89,43 +147,44 @@ export default function ChatInterface({ currentUser, otherUser }: ChatInterfaceP
             if (updatesMade) {
                 batch.commit().catch(err => {
                     console.error("Error marking messages as read:", err);
-                    // Don't emit a global error for this, as it's a background task.
                 });
             }
         }
     }, [messages, firestore, currentUser, otherUser.id]);
 
-    const handleSendMessage = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!newMessage.trim() || !currentUser) return;
-    
+    const sendMessage = async (content: string) => {
+        if (!content.trim() || !currentUser) return;
+
         setIsSending(true);
-    
+
         const messageData = {
             senderId: currentUser.uid,
-            content: newMessage.trim(),
+            content: content.trim(),
             timestamp: serverTimestamp(),
             members: [currentUser.uid, otherUser.id].sort(),
             isRead: false,
         };
-    
+
         const messagesColRef = collection(firestore, 'messages');
         
-        addDoc(messagesColRef, messageData)
-            .then(() => {
-                setNewMessage('');
-            })
-            .catch(err => {
-                const permissionError = new FirestorePermissionError({
-                    path: messagesColRef.path,
-                    operation: 'create',
-                    requestResourceData: messageData,
-                });
-                errorEmitter.emit('permission-error', permissionError);
-            })
-            .finally(() => {
-                setIsSending(false);
+        try {
+            await addDoc(messagesColRef, messageData);
+            setNewMessage('');
+        } catch (err) {
+            const permissionError = new FirestorePermissionError({
+                path: messagesColRef.path,
+                operation: 'create',
+                requestResourceData: messageData,
             });
+            errorEmitter.emit('permission-error', permissionError);
+        } finally {
+            setIsSending(false);
+        }
+    };
+
+    const handleFormSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        sendMessage(newMessage);
     };
 
     return (
@@ -181,7 +240,8 @@ export default function ChatInterface({ currentUser, otherUser }: ChatInterfaceP
                 <div ref={messagesEndRef} />
             </div>
             <div className="p-4 border-t border-border/50">
-                <form onSubmit={handleSendMessage} className="flex items-center gap-2">
+                <form onSubmit={handleFormSubmit} className="flex items-center gap-2">
+                    <SchedulePopover onScheduleSend={sendMessage} />
                     <Input
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
