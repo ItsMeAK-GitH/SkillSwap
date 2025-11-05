@@ -20,14 +20,11 @@ DevSwap is a modern web application designed to connect developers for peer-to-p
 
 ##  Tech Stack
 
--   **Framework**: [Next.js](https://nextjs.org/) (App Router)
+-   **Framework**: [Next.js](https://nextjs.org/) (
 -   **Language**: [TypeScript](https://www.typescriptlang.org/)
 -   **Styling**: [Tailwind CSS](https://tailwindcss.com/)
--   **UI Components**: [ShadCN/UI](https://ui.shadcn.com/)
--   **Generative AI**: [Firebase Genkit](https://firebase.google.com/docs/genkit) with Google's Gemini models
--   **Authentication**: [Firebase Authentication](https://firebase.google.com/docs/auth)
--   **Animation**: [Framer Motion](https://www.framer.com/motion/) & [Lenis](https://lenis.studiofreight.com/) for smooth scrolling
-
+-   **Generative AI**: [Firebase Genkit](https://firebase.google.com/docs/genkit)
+-   
 ## Folder Structure
 
 The project follows a feature-centric structure within the Next.js App Router paradigm. Key directories are organized to separate concerns and improve maintainability.
@@ -48,7 +45,7 @@ The project follows a feature-centric structure within the Next.js App Router pa
 │   │   ├── sections/        # Large, page-specific sections
 │   │   └── ui/              # ShadCN UI components
 │   ├── firebase/            # Firebase configuration, hooks, and providers
-│   │   └── auth/            # Authentication-related hooks (e.g., useUser)
+│   │   └── auth/            # Authentication related hooks (e.g., useUser)
 │   ├── hooks/               # Custom React hooks (e.g., useToast)
 │   ├── lib/                 # Utility functions, auth logic, constants
 │   └── ...
