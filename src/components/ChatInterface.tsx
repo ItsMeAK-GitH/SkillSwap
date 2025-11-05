@@ -129,7 +129,8 @@ const isSchedule = (content: any): content is ScheduleDetails => {
 
 const ScheduleCard = ({ msg, currentUser }: { msg: ChatMessage, currentUser: User }) => {
     const firestore = useFirestore();
-    const details = msg.content as ScheduleDetails;
+    if (!isSchedule(msg.content)) return null;
+    const details = msg.content;
     const isReceiver = currentUser.uid !== details.proposerId;
 
     const handleAccept = async () => {
@@ -297,7 +298,7 @@ export default function ChatInterface({ currentUser, otherUser }: ChatInterfaceP
                                         'rounded-lg px-4 py-2 text-sm',
                                         isCurrentUser ? 'bg-primary text-primary-foreground rounded-br-none' : 'bg-muted rounded-bl-none'
                                     )}>
-                                        {msg.content}
+                                        {typeof msg.content === 'string' ? msg.content : ''}
                                     </div>
                                 )}
                                 <span className={cn(
@@ -337,3 +338,5 @@ export default function ChatInterface({ currentUser, otherUser }: ChatInterfaceP
         </div>
     );
 }
+
+    
