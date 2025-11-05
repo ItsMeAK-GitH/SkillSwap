@@ -1,9 +1,8 @@
-
 'use client';
 
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { useCollection, useFirestore, useMemoFirebase, errorEmitter, FirestorePermissionError } from '@/firebase';
-import { collection, addDoc, serverTimestamp, query, where, doc, writeBatch } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, query, where, doc, writeBatch, orderBy } from 'firebase/firestore';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Send, Loader2 } from 'lucide-react';
@@ -43,28 +42,32 @@ export default function ChatInterface({ currentUser, otherUser }: ChatInterfaceP
     const [isSending, setIsSending] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
+    // This query is now valid according to the security rules.
+    // It fetches all message groups the user is a member of.
     const messagesQuery = useMemoFirebase(() => {
         if (!currentUser) return null;
-        // The query for messages between two users needs to be on a sorted array of their UIDs
-        // to ensure the query is consistent regardless of who initiates the chat.
-        const chatMembers = [currentUser.uid, otherUser.id].sort();
         return query(
             collection(firestore, 'messages'),
-            where('members', '==', chatMembers)
+            where('members', 'array-contains', currentUser.uid)
         );
-    }, [firestore, currentUser, otherUser.id]);
+    }, [firestore, currentUser]);
 
     const { data: fetchedMessages, isLoading: isLoadingMessages, error: messagesError } = useCollection<ChatMessage>(messagesQuery);
-
-    // Messages are now sorted on the client-side after being fetched.
+    
+    // Client-side filtering and sorting
     const messages = useMemo(() => {
         if (!fetchedMessages) return [];
-        return [...fetchedMessages].sort((a, b) => {
+        // 1. Filter for messages relevant to this specific chat
+        const relevantMessages = fetchedMessages.filter(msg => 
+            msg.members.includes(otherUser.id)
+        );
+        // 2. Sort the relevant messages by timestamp
+        return [...relevantMessages].sort((a, b) => {
             const dateA = a.timestamp?.toDate ? a.timestamp.toDate().getTime() : 0;
             const dateB = b.timestamp?.toDate ? b.timestamp.toDate().getTime() : 0;
             return dateA - dateB;
         });
-    }, [fetchedMessages]);
+    }, [fetchedMessages, otherUser.id]);
     
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });

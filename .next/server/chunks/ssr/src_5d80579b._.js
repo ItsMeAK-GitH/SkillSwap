@@ -66,9 +66,6 @@ Button.displayName = "Button";
 var { g: global, __dirname } = __turbopack_context__;
 {
 __turbopack_context__.s({
-    "auth": (()=>auth),
-    "firebaseApp": (()=>firebaseApp),
-    "firestore": (()=>firestore),
     "getFirebaseServices": (()=>getFirebaseServices)
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$firebase$2f$app$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$module__evaluation$3e$__ = __turbopack_context__.i("[project]/node_modules/firebase/app/dist/index.mjs [app-ssr] (ecmascript) <module evaluation>");
@@ -82,19 +79,21 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$firebase$2f$config$2e
 ;
 ;
 ;
+let services = null;
 function getFirebaseServices() {
+    if (services) {
+        return services;
+    }
     const app = !(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$firebase$2f$app$2f$dist$2f$esm$2f$index$2e$esm2017$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["getApps"])().length ? (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$firebase$2f$app$2f$dist$2f$esm$2f$index$2e$esm2017$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["initializeApp"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$firebase$2f$config$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["firebaseConfig"]) : (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$firebase$2f$app$2f$dist$2f$esm$2f$index$2e$esm2017$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["getApp"])();
     const firestore = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$firebase$2f$firestore$2f$dist$2f$index$2e$node$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getFirestore"])(app);
     const auth = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$firebase$2f$node_modules$2f40$firebase$2f$auth$2f$dist$2f$node$2d$esm$2f$totp$2d$18137433$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__p__as__getAuth$3e$__["getAuth"])(app);
-    return {
+    services = {
         auth,
         firestore,
         firebaseApp: app
     };
+    return services;
 }
-// Export singleton instances for server-side use.
-const { auth, firestore, firebaseApp } = getFirebaseServices();
-;
 }}),
 "[project]/src/lib/auth.ts [app-ssr] (ecmascript)": ((__turbopack_context__) => {
 "use strict";
