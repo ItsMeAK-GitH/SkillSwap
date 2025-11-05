@@ -264,31 +264,6 @@ export default function ChatInterface({ currentUser, otherUser }: ChatInterfaceP
         e.preventDefault();
         sendMessage(newMessage);
     };
-    
-    // This is the new, robust rendering function to prevent crashes.
-    const renderMessageContent = (msg: ChatMessage) => {
-      const isCurrentUser = msg.senderId === currentUser.uid;
-      
-      // 1. Primary Check: Is it a schedule object?
-      if (isSchedule(msg.content)) {
-        return <ScheduleCard msg={msg} currentUser={currentUser} />;
-      }
-    
-      // 2. Secondary Check: Is it a string?
-      if (typeof msg.content === 'string') {
-        return (
-          <div className={cn(
-            'rounded-lg px-4 py-2 text-sm',
-            isCurrentUser ? 'bg-primary text-primary-foreground rounded-br-none' : 'bg-muted rounded-bl-none'
-          )}>
-            {msg.content}
-          </div>
-        );
-      }
-    
-      // 3. Fallback: It's neither a schedule nor a string, so render nothing to prevent a crash.
-      return null;
-    };
 
     return (
         <div className="flex flex-col h-[600px] bg-background/50 rounded-lg border border-border/50">
@@ -309,6 +284,24 @@ export default function ChatInterface({ currentUser, otherUser }: ChatInterfaceP
                     const senderName = isCurrentUser ? currentUser.displayName : otherUser.name;
                     const senderPhoto = isCurrentUser ? currentUser.photoURL : otherUser.photoURL;
 
+                    // This is the definitive fix. We determine what to render *before* the return statement.
+                    let contentToRender;
+                    if (isSchedule(msg.content)) {
+                        contentToRender = <ScheduleCard msg={msg} currentUser={currentUser} />;
+                    } else if (typeof msg.content === 'string') {
+                        contentToRender = (
+                            <div className={cn(
+                                'rounded-lg px-4 py-2 text-sm',
+                                isCurrentUser ? 'bg-primary text-primary-foreground rounded-br-none' : 'bg-muted rounded-bl-none'
+                            )}>
+                                {msg.content}
+                            </div>
+                        );
+                    } else {
+                        // If it's not a schedule or a string (e.g., an invalid or temporary state), render nothing.
+                        contentToRender = null;
+                    }
+
                     return (
                         <div key={msg.id || index} className={cn('flex items-start gap-3', isCurrentUser && 'justify-end')}>
                             {!isCurrentUser && (
@@ -318,7 +311,7 @@ export default function ChatInterface({ currentUser, otherUser }: ChatInterfaceP
                                 </Avatar>
                             )}
                             <div className="flex flex-col max-w-xs md:max-w-md">
-                                {renderMessageContent(msg)}
+                                {contentToRender}
                                 <span className={cn(
                                     'text-xs text-muted-foreground mt-1',
                                      isCurrentUser ? 'text-right' : 'text-left'
