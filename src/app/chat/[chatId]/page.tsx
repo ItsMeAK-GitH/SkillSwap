@@ -1,5 +1,6 @@
 'use client';
 
+import { use } from 'react';
 import { useDoc, useMemoFirebase, useFirestore, useUser } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import Header from '@/components/layout/header';
@@ -15,7 +16,7 @@ interface UserProfile {
 }
 
 export default function ChatPage({ params }: { params: { chatId: string } }) {
-  const { chatId: otherUserId } = params;
+  const { chatId: otherUserId } = use(params);
   const firestore = useFirestore();
   const { user: currentUser } = useUser();
 

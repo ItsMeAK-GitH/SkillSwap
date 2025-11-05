@@ -32,7 +32,7 @@ interface UserProfile {
 }
 
 export default function UserProfilePage({ params }: { params: { userId: string } }) {
-  const { userId } = params;
+  const { userId } = use(params);
   const firestore = useFirestore();
   const { user: currentUser } = useUser();
   const router = useRouter();
