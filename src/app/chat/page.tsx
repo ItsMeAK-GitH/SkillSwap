@@ -54,14 +54,19 @@ function ConversationItem({ conversation }: { conversation: Conversation }) {
 
     const lastMessageContent = useMemo(() => {
         const content = conversation.lastMessage.content;
-        if (typeof content === 'string') {
-            return content;
-        }
-        // This is a more robust check for the schedule object.
-        if (typeof content === 'object' && content !== null && 'type' in content && content.type === 'schedule') {
+        
+        // Explicitly check for object type and 'type' property
+        if (typeof content === 'object' && content !== null && 'type' in content && (content as ScheduleDetails).type === 'schedule') {
             return '📅 Meeting Request';
+        } 
+        // Then, check if it's a string
+        else if (typeof content === 'string') {
+            return content;
+        } 
+        // Fallback for any other case to prevent crashes
+        else {
+            return '...';
         }
-        return '...';
     }, [conversation.lastMessage.content]);
 
     return (

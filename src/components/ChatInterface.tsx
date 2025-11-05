@@ -265,7 +265,10 @@ export default function ChatInterface({ currentUser, otherUser }: ChatInterfaceP
         sendMessage(newMessage);
     };
     
+    // This is the new, robust rendering function to prevent crashes.
     const renderMessageContent = (msg: ChatMessage) => {
+      const isCurrentUser = msg.senderId === currentUser.uid;
+      
       // 1. Primary Check: Is it a schedule object?
       if (isSchedule(msg.content)) {
         return <ScheduleCard msg={msg} currentUser={currentUser} />;
@@ -273,7 +276,6 @@ export default function ChatInterface({ currentUser, otherUser }: ChatInterfaceP
     
       // 2. Secondary Check: Is it a string?
       if (typeof msg.content === 'string') {
-        const isCurrentUser = msg.senderId === currentUser.uid;
         return (
           <div className={cn(
             'rounded-lg px-4 py-2 text-sm',
@@ -284,7 +286,7 @@ export default function ChatInterface({ currentUser, otherUser }: ChatInterfaceP
         );
       }
     
-      // 3. Fallback: It's neither, render nothing to prevent a crash.
+      // 3. Fallback: It's neither a schedule nor a string, so render nothing to prevent a crash.
       return null;
     };
 
@@ -354,5 +356,3 @@ export default function ChatInterface({ currentUser, otherUser }: ChatInterfaceP
         </div>
     );
 }
-
-    
