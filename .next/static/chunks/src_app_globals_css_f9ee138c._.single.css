@@ -994,16 +994,16 @@ body {
   width: 1px;
 }
 
-.w-full {
-  width: 100%;
-}
-
 .w-\[80px\] {
   width: 80px;
 }
 
 .w-auto {
   width: auto;
+}
+
+.w-full {
+  width: 100%;
 }
 
 .min-w-0 {
