@@ -64,7 +64,7 @@ function SchedulePopover({ onScheduleSend, currentUser, otherUser }: { onSchedul
         date.setHours(hours);
         date.setMinutes(parseInt(minute, 10));
 
-        const meetLink = `https://meet.google.com/lookup/${Math.random().toString(36).substring(2, 12)}`;
+        const meetLink = `https://meet.google.com/new`;
         
         const scheduleDetails: ScheduleDetails = {
             type: 'schedule',
