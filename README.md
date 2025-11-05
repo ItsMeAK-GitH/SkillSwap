@@ -28,6 +28,13 @@ DevSwap is a modern web application designed to connect developers for peer-to-p
 -   **Authentication**: [Firebase Authentication](https://firebase.google.com/docs/auth)
 -   **Animation**: [Framer Motion](https://www.framer.com/motion/) & [Lenis](https://lenis.studiofreight.com/) for smooth scrolling
 
+## Folder Structure
+
+The project follows a feature-centric structure within the Next.js App Router paradigm. Key directories are organized to separate concerns and improve maintainability.
+
+
+/ ├── public/ # Static assets (images, fonts) ├── src/ │ ├── app/ # Next.js App Router (pages, layouts, API routes) │ ├── ai/ # Genkit flows and AI-related logic │ │ └── flows/ # Specific AI agent flows (e.g., matching, verification) │ ├── components/ # Reusable React components │ │ ├── layout/ # Layout components (Header, Footer) │ │ ├── sections/ # Large, page-specific sections │ │ └── ui/ # ShadCN UI components │ ├── firebase/ # Firebase configuration, hooks, and providers │ │ └── auth/ # Authentication-related hooks (e.g., useUser) │ ├── hooks/ # Custom React hooks (e.g., useToast) │ ├── lib/ # Utility functions, auth logic, constants │ └── ... ├── docs/ # Project documentation (e.g., backend schema) ├── next.config.ts # Next.js configuration ├── tailwind.config.ts # Tailwind CSS configuration └── tsconfig.json # TypeScript configuration
+
 ##  Getting Started
 
 Follow these instructions to set up and run the project on your local machine.
