@@ -57,7 +57,8 @@ function ConversationItem({ conversation }: { conversation: Conversation }) {
         if (typeof content === 'string') {
             return content;
         }
-        if (typeof content === 'object' && content?.type === 'schedule') {
+        // This is a more robust check for the schedule object.
+        if (typeof content === 'object' && content !== null && 'type' in content && content.type === 'schedule') {
             return '📅 Meeting Request';
         }
         return '...';

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useRef, useMemo } from 'react';
@@ -124,19 +125,21 @@ function SchedulePopover({ onScheduleSend, currentUser, otherUser }: { onSchedul
 }
 
 const isSchedule = (content: any): content is ScheduleDetails => {
-  return content?.type === 'schedule';
+  return typeof content === 'object' && content !== null && content.type === 'schedule';
 };
 
 const ScheduleCard = ({ msg, currentUser }: { msg: ChatMessage, currentUser: User }) => {
     const firestore = useFirestore();
+    // This check is now redundant because we do it before rendering, but it's safe to keep.
     if (!isSchedule(msg.content)) return null;
+    
     const details = msg.content;
     const isReceiver = currentUser.uid !== details.proposerId;
 
     const handleAccept = async () => {
         if (!msg.id || !firestore) return;
         const msgRef = doc(firestore, 'messages', msg.id);
-        const newContent = { ...details, status: 'accepted' };
+        const newContent = { ...details, status: 'accepted' as const };
         try {
             await updateDoc(msgRef, { content: newContent });
         } catch (err) {
@@ -282,6 +285,25 @@ export default function ChatInterface({ currentUser, otherUser }: ChatInterfaceP
                     const senderName = isCurrentUser ? currentUser.displayName : otherUser.name;
                     const senderPhoto = isCurrentUser ? currentUser.photoURL : otherUser.photoURL;
 
+                    // This is the core fix: Determine what content to render safely.
+                    let messageContentNode: React.ReactNode;
+                    if (isSchedule(msg.content)) {
+                        messageContentNode = <ScheduleCard msg={msg} currentUser={currentUser} />;
+                    } else if (typeof msg.content === 'string') {
+                        messageContentNode = (
+                            <div className={cn(
+                                'rounded-lg px-4 py-2 text-sm',
+                                isCurrentUser ? 'bg-primary text-primary-foreground rounded-br-none' : 'bg-muted rounded-bl-none'
+                            )}>
+                                {msg.content}
+                            </div>
+                        );
+                    } else {
+                        // Render nothing if content is not a string or a schedule, preventing the crash.
+                        messageContentNode = null;
+                    }
+
+
                     return (
                         <div key={msg.id || index} className={cn('flex items-start gap-3', isCurrentUser && 'justify-end')}>
                             {!isCurrentUser && (
@@ -291,16 +313,7 @@ export default function ChatInterface({ currentUser, otherUser }: ChatInterfaceP
                                 </Avatar>
                             )}
                             <div className="flex flex-col max-w-xs md:max-w-md">
-                                {isSchedule(msg.content) ? (
-                                    <ScheduleCard msg={msg} currentUser={currentUser} />
-                                ) : (
-                                    <div className={cn(
-                                        'rounded-lg px-4 py-2 text-sm',
-                                        isCurrentUser ? 'bg-primary text-primary-foreground rounded-br-none' : 'bg-muted rounded-bl-none'
-                                    )}>
-                                        {typeof msg.content === 'string' ? msg.content : ''}
-                                    </div>
-                                )}
+                                {messageContentNode}
                                 <span className={cn(
                                     'text-xs text-muted-foreground mt-1',
                                      isCurrentUser ? 'text-right' : 'text-left'
@@ -338,5 +351,3 @@ export default function ChatInterface({ currentUser, otherUser }: ChatInterfaceP
         </div>
     );
 }
-
-    
