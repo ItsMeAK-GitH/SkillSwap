@@ -47,9 +47,8 @@ export default function SwapPage() {
       setError(null);
 
       const usersRef = collection(firestore, 'users');
-      try {
-        const querySnapshot = await getDocs(usersRef);
-
+      
+      getDocs(usersRef).then(querySnapshot => {
         const allUsers: UserProfile[] = [];
         querySnapshot.forEach(docSnap => {
           if (docSnap.id !== currentUserProfile.id) {
@@ -84,17 +83,17 @@ export default function SwapPage() {
         }
         
         setMatches(foundMatches);
+        setIsLoadingMatches(false);
 
-      } catch (err: any) {
+      }).catch(err => {
         const permissionError = new FirestorePermissionError({
             path: usersRef.path,
             operation: 'list',
         });
         setError(permissionError);
         errorEmitter.emit('permission-error', permissionError);
-      } finally {
         setIsLoadingMatches(false);
-      }
+      });
     };
 
     if (currentUserProfile) {
