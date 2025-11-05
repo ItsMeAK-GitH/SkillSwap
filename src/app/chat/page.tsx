@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useMemo } from 'react';
@@ -12,11 +13,16 @@ import { useRouter } from 'next/navigation';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
 
+interface ScheduleDetails {
+    type: 'schedule';
+    // other properties are not needed for this view
+}
+
 interface ChatMessage {
   id: string;
   members: string[];
   senderId: string;
-  content: string;
+  content: string | ScheduleDetails;
   timestamp: any;
   isRead: boolean;
 }
@@ -46,6 +52,17 @@ function ConversationItem({ conversation }: { conversation: Conversation }) {
       router.push(`/chat/${conversation.otherUser.id}`);
     };
 
+    const lastMessageContent = useMemo(() => {
+        const content = conversation.lastMessage.content;
+        if (typeof content === 'string') {
+            return content;
+        }
+        if (typeof content === 'object' && content?.type === 'schedule') {
+            return '📅 Meeting Request';
+        }
+        return '...';
+    }, [conversation.lastMessage.content]);
+
     return (
         <div 
             onClick={handleConversationClick}
@@ -58,7 +75,7 @@ function ConversationItem({ conversation }: { conversation: Conversation }) {
             <div className="flex-1 overflow-hidden">
                 <h4 className="font-semibold truncate">{conversation.otherUser.name}</h4>
                 <p className={cn("text-sm truncate", conversation.unreadCount > 0 ? "text-foreground font-medium" : "text-muted-foreground")}>
-                    {conversation.lastMessage.content}
+                    {lastMessageContent}
                 </p>
             </div>
             <div className="flex flex-col items-end text-xs text-muted-foreground ml-2">
