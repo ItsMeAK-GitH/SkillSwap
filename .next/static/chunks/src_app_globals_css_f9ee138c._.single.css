@@ -1860,6 +1860,10 @@ body {
   padding-top: 1rem;
 }
 
+.pl-9 {
+  padding-left: 2.25rem;
+}
+
 .text-left {
   text-align: left;
 }

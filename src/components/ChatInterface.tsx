@@ -6,7 +6,7 @@ import { useCollection, useFirestore, useMemoFirebase, errorEmitter, FirestorePe
 import { collection, addDoc, serverTimestamp, query, where, doc, writeBatch, updateDoc } from 'firebase/firestore';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Send, Loader2, Calendar as CalendarIcon, Check } from 'lucide-react';
+import { Send, Loader2, Calendar as CalendarIcon, Check, Link } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { User } from 'firebase/auth';
@@ -14,6 +14,7 @@ import { format, formatDistanceToNow, parseISO } from 'date-fns';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
 
 interface ScheduleDetails {
     type: 'schedule';
@@ -54,18 +55,11 @@ function SchedulePopover({ onScheduleSend, currentUser, otherUser }: { onSchedul
     const [hour, setHour] = useState<string>('12');
     const [minute, setMinute] = useState<string>('00');
     const [ampm, setAmpm] = useState<string>('PM');
-
-    const generateMeetLink = () => {
-        const chars = 'abcdefghijklmnopqrstuvwxyz';
-        const randomChar = () => chars[Math.floor(Math.random() * chars.length)];
-        const codePart = (length: number) => Array.from({ length }, randomChar).join('');
-        
-        const code = `${codePart(3)}-${codePart(4)}-${codePart(3)}`;
-        return `https://meet.google.com/${code}`;
-    };
+    const [meetLink, setMeetLink] = useState('');
+    const [popoverOpen, setPopoverOpen] = useState(false);
 
     const handleScheduleSend = () => {
-        if (!date) return;
+        if (!date || !meetLink.trim()) return;
         
         let hours = parseInt(hour, 10);
         if (ampm === 'PM' && hours < 12) hours += 12;
@@ -74,25 +68,24 @@ function SchedulePopover({ onScheduleSend, currentUser, otherUser }: { onSchedul
         date.setHours(hours);
         date.setMinutes(parseInt(minute, 10));
 
-        const meetLink = generateMeetLink();
-        
         const scheduleDetails: ScheduleDetails = {
             type: 'schedule',
             proposerId: currentUser.uid,
             title: `Skill Swap: ${currentUser.displayName} & ${otherUser.name}`,
             date: date.toISOString(),
-            meetLink: meetLink,
+            meetLink: meetLink.trim(),
             status: 'pending'
         };
 
         onScheduleSend(scheduleDetails);
+        setPopoverOpen(false); // Close popover after sending
     };
 
     const hours = Array.from({ length: 12 }, (_, i) => (i + 1).toString().padStart(2, '0'));
     const minutes = Array.from({ length: 60 / 5 }, (_, i) => (i * 5).toString().padStart(2, '0'));
 
     return (
-        <Popover>
+        <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
             <PopoverTrigger asChild>
                 <Button variant="ghost" size="icon">
                     <CalendarIcon className="h-5 w-5" />
@@ -126,7 +119,20 @@ function SchedulePopover({ onScheduleSend, currentUser, otherUser }: { onSchedul
                             </SelectContent>
                         </Select>
                     </div>
-                    <Button onClick={handleScheduleSend} className="w-full">Schedule & Send</Button>
+                    <div className="space-y-2">
+                        <Label htmlFor="meet-link">Meeting Link</Label>
+                        <div className="relative">
+                            <Link className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Input 
+                                id="meet-link"
+                                placeholder="https://meet.google.com/..."
+                                value={meetLink}
+                                onChange={(e) => setMeetLink(e.target.value)}
+                                className="pl-9"
+                            />
+                        </div>
+                    </div>
+                    <Button onClick={handleScheduleSend} className="w-full" disabled={!meetLink.trim()}>Schedule & Send</Button>
                 </div>
             </PopoverContent>
         </Popover>
@@ -293,7 +299,6 @@ export default function ChatInterface({ currentUser, otherUser }: ChatInterfaceP
                     const senderName = isCurrentUser ? currentUser.displayName : otherUser.name;
                     const senderPhoto = isCurrentUser ? currentUser.photoURL : otherUser.photoURL;
 
-                    // This is the definitive fix. We determine what to render *before* the return statement.
                     let contentToRender;
                     if (isSchedule(msg.content)) {
                         contentToRender = <ScheduleCard msg={msg} currentUser={currentUser} />;
@@ -307,7 +312,6 @@ export default function ChatInterface({ currentUser, otherUser }: ChatInterfaceP
                             </div>
                         );
                     } else {
-                        // If it's not a schedule or a string (e.g., an invalid or temporary state), render nothing.
                         contentToRender = null;
                     }
 
