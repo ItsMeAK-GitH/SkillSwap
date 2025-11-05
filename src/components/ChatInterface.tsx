@@ -45,8 +45,9 @@ export default function ChatInterface({ currentUser, otherUser }: ChatInterfaceP
 
     const messagesQuery = useMemoFirebase(() => {
         if (!currentUser) return null;
+        // The query for messages between two users needs to be on a sorted array of their UIDs
+        // to ensure the query is consistent regardless of who initiates the chat.
         const chatMembers = [currentUser.uid, otherUser.id].sort();
-        // This query now ONLY filters by members. The orderBy is removed to avoid needing a composite index.
         return query(
             collection(firestore, 'messages'),
             where('members', '==', chatMembers)
@@ -97,7 +98,7 @@ export default function ChatInterface({ currentUser, otherUser }: ChatInterfaceP
     
         setIsSending(true);
     
-        const messageData = { // No ID needed for new doc
+        const messageData = {
             senderId: currentUser.uid,
             content: newMessage.trim(),
             timestamp: serverTimestamp(),

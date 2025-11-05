@@ -915,11 +915,12 @@ function ChatInterface({ currentUser, otherUser }) {
     const messagesEndRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRef"])(null);
     const messagesQuery = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$firebase$2f$provider$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useMemoFirebase"])(()=>{
         if (!currentUser) return null;
+        // The query for messages between two users needs to be on a sorted array of their UIDs
+        // to ensure the query is consistent regardless of who initiates the chat.
         const chatMembers = [
             currentUser.uid,
             otherUser.id
         ].sort();
-        // This query now ONLY filters by members. The orderBy is removed to avoid needing a composite index.
         return (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$firebase$2f$firestore$2f$dist$2f$index$2e$node$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["query"])((0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$firebase$2f$firestore$2f$dist$2f$index$2e$node$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["collection"])(firestore, 'messages'), (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$firebase$2f$firestore$2f$dist$2f$index$2e$node$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["where"])('members', '==', chatMembers));
     }, [
         firestore,
@@ -1013,12 +1014,12 @@ function ChatInterface({ currentUser, otherUser }) {
                             className: "h-8 w-8 animate-spin text-primary"
                         }, void 0, false, {
                             fileName: "[project]/src/components/ChatInterface.tsx",
-                            lineNumber: 130,
+                            lineNumber: 131,
                             columnNumber: 96
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/components/ChatInterface.tsx",
-                        lineNumber: 130,
+                        lineNumber: 131,
                         columnNumber: 39
                     }, this),
                     messagesError && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1026,7 +1027,7 @@ function ChatInterface({ currentUser, otherUser }) {
                         children: "Error loading messages. It might be a permission issue."
                     }, void 0, false, {
                         fileName: "[project]/src/components/ChatInterface.tsx",
-                        lineNumber: 132,
+                        lineNumber: 133,
                         columnNumber: 35
                     }, this),
                     !isLoadingMessages && messages && messages.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1036,7 +1037,7 @@ function ChatInterface({ currentUser, otherUser }) {
                                 children: "No messages yet."
                             }, void 0, false, {
                                 fileName: "[project]/src/components/ChatInterface.tsx",
-                                lineNumber: 136,
+                                lineNumber: 137,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1047,13 +1048,13 @@ function ChatInterface({ currentUser, otherUser }) {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/ChatInterface.tsx",
-                                lineNumber: 137,
+                                lineNumber: 138,
                                 columnNumber: 25
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/ChatInterface.tsx",
-                        lineNumber: 135,
+                        lineNumber: 136,
                         columnNumber: 21
                     }, this),
                     messages?.map((msg, index)=>{
@@ -1070,20 +1071,20 @@ function ChatInterface({ currentUser, otherUser }) {
                                             src: senderPhoto || `https://api.dicebear.com/8.x/initials/svg?seed=${senderName}`
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/ChatInterface.tsx",
-                                            lineNumber: 150,
+                                            lineNumber: 151,
                                             columnNumber: 37
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$avatar$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AvatarFallback"], {
                                             children: getInitials(senderName)
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/ChatInterface.tsx",
-                                            lineNumber: 151,
+                                            lineNumber: 152,
                                             columnNumber: 37
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/ChatInterface.tsx",
-                                    lineNumber: 149,
+                                    lineNumber: 150,
                                     columnNumber: 33
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1094,7 +1095,7 @@ function ChatInterface({ currentUser, otherUser }) {
                                             children: msg.content
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/ChatInterface.tsx",
-                                            lineNumber: 155,
+                                            lineNumber: 156,
                                             columnNumber: 33
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1104,13 +1105,13 @@ function ChatInterface({ currentUser, otherUser }) {
                                             }) : 'sending...'
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/ChatInterface.tsx",
-                                            lineNumber: 161,
+                                            lineNumber: 162,
                                             columnNumber: 33
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/ChatInterface.tsx",
-                                    lineNumber: 154,
+                                    lineNumber: 155,
                                     columnNumber: 29
                                 }, this),
                                 isCurrentUser && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$avatar$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Avatar"], {
@@ -1120,26 +1121,26 @@ function ChatInterface({ currentUser, otherUser }) {
                                             src: senderPhoto || `https://api.dicebear.com/8.x/initials/svg?seed=${senderName}`
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/ChatInterface.tsx",
-                                            lineNumber: 170,
+                                            lineNumber: 171,
                                             columnNumber: 37
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$avatar$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AvatarFallback"], {
                                             children: getInitials(senderName)
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/ChatInterface.tsx",
-                                            lineNumber: 171,
+                                            lineNumber: 172,
                                             columnNumber: 37
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/ChatInterface.tsx",
-                                    lineNumber: 169,
+                                    lineNumber: 170,
                                     columnNumber: 33
                                 }, this)
                             ]
                         }, msg.id || index, true, {
                             fileName: "[project]/src/components/ChatInterface.tsx",
-                            lineNumber: 147,
+                            lineNumber: 148,
                             columnNumber: 25
                         }, this);
                     }),
@@ -1147,13 +1148,13 @@ function ChatInterface({ currentUser, otherUser }) {
                         ref: messagesEndRef
                     }, void 0, false, {
                         fileName: "[project]/src/components/ChatInterface.tsx",
-                        lineNumber: 177,
+                        lineNumber: 178,
                         columnNumber: 17
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/ChatInterface.tsx",
-                lineNumber: 129,
+                lineNumber: 130,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1170,7 +1171,7 @@ function ChatInterface({ currentUser, otherUser }) {
                             disabled: isSending
                         }, void 0, false, {
                             fileName: "[project]/src/components/ChatInterface.tsx",
-                            lineNumber: 181,
+                            lineNumber: 182,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -1181,13 +1182,13 @@ function ChatInterface({ currentUser, otherUser }) {
                                     className: "h-4 w-4 animate-spin"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/ChatInterface.tsx",
-                                    lineNumber: 189,
+                                    lineNumber: 190,
                                     columnNumber: 38
                                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$send$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Send$3e$__["Send"], {
                                     className: "h-4 w-4"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/ChatInterface.tsx",
-                                    lineNumber: 189,
+                                    lineNumber: 190,
                                     columnNumber: 85
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1195,30 +1196,30 @@ function ChatInterface({ currentUser, otherUser }) {
                                     children: "Send"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/ChatInterface.tsx",
-                                    lineNumber: 190,
+                                    lineNumber: 191,
                                     columnNumber: 25
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/ChatInterface.tsx",
-                            lineNumber: 188,
+                            lineNumber: 189,
                             columnNumber: 21
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/ChatInterface.tsx",
-                    lineNumber: 180,
+                    lineNumber: 181,
                     columnNumber: 17
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/components/ChatInterface.tsx",
-                lineNumber: 179,
+                lineNumber: 180,
                 columnNumber: 13
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/ChatInterface.tsx",
-        lineNumber: 128,
+        lineNumber: 129,
         columnNumber: 9
     }, this);
 }
