@@ -1,6 +1,8 @@
 # devswap v1 - AI-Powered Skill Exchange Platform for Developers
 
-DevSwap is a modern web application designed to connect developers for peer-to-peer skill sharing. Leveraging a sophisticated AI-powered matching system, real-time chat, and a gamified reputation system, it provides a dynamic and engaging environment for learning and teaching.
+DevSwap is a modern web application designed to connect developers for peer-to-peer skill sharing. Leveraging a sophisticated AI-powered matching system and a real-time chat it provides a dynamic and engaging environment for learning and teaching.
+
+
 <img width="1275" height="605" alt="Screenshot 2025-11-05 at 9 09 22 PM" src="https://github.com/user-attachments/assets/0847e3de-7b16-43c2-b6c9-ed965efb5982" />
 <img width="1245" height="587" alt="Screenshot 2025-11-05 at 9 11 35 PM" src="https://github.com/user-attachments/assets/9d59bbd3-733f-43d1-b1fc-af95bf879ef2" />
 <img width="1257" height="600" alt="Screenshot 2025-11-05 at 9 12 01 PM" src="https://github.com/user-attachments/assets/811d6289-5089-443b-b44a-37a808eb85d9" />
